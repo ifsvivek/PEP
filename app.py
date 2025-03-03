@@ -382,6 +382,11 @@ def get_hint():
     hint = code_executor.generate_hint(code, problem['description'], language)
     return jsonify({'hint': hint})
 
+@app.route('/coding')
+def coding():
+    if 'username' not in session:
+        return redirect(url_for('login'))
+    return render_template('coding.html')
 
 if __name__ == '__main__':
     app.run(debug=True)
