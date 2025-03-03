@@ -1,0 +1,90 @@
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #f8f9fa;
+}
+
+.navbar-brand {
+    font-weight: 700;
+    font-size: 1.5rem;
+}
+
+footer {
+    margin-top: 50px;
+    padding: 20px 0;
+    border-top: 1px solid #e7e7e7;
+}
+
+.card {
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    border-radius: 8px;
+    border: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.card-header {
+    background-color: rgba(0, 123, 255, 0.05);
+}
+
+.list-group-item {
+    border-left: none;
+    border-right: none;
+}
+
+.list-group-item:first-child {
+    border-top: none;
+}
+
+.list-group-item:last-child {
+    border-bottom: none;
+}
+
+/* Dashboard styles */
+.badge {
+    font-size: 85%;
+}
+
+/* Learn page styles */
+.content-section {
+    line-height: 1.6;
+}
+
+/* Quiz styles */
+.form-check {
+    margin-bottom: 10px;
+    padding: 10px;
+    border-radius: 5px;
+    transition: background-color 0.2s;
+}
+
+.form-check:hover {
+    background-color: rgba(0, 123, 255, 0.05);
+}
+
+/* Quiz results styles */
+.display-1 {
+    font-size: 5rem;
+    font-weight: 700;
+}
+
+/* Custom styles can still be used to complement Tailwind */
+/* These are minimal overrides since we're using Tailwind for most styling */
+
+/* Fix for Tailwind form radio buttons */
+.form-radio {
+    appearance: none;
+    -webkit-appearance: none;
+    border: 1px solid #cbd5e0;
+    border-radius: 50%;
+    outline: none;
+    transition: all 0.2s ease-in-out;
+}
+
+.form-radio:checked {
+    background-color: #3b82f6;
+    border-color: #3b82f6;
+    background-image: url("data:image/svg+xml,%3csvg viewBox='0 0 16 16' fill='white' xmlns='http://www.w3.org/2000/svg'%3e%3ccircle cx='8' cy='8' r='4'/%3e%3c/svg%3e");
+    background-size: 100% 100%;
+    background-position: center;
+    background-repeat: no-repeat;
+}
+
+/* Additional custom styling if needed */

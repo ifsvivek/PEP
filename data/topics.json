@@ -1,0 +1,37 @@
+{
+    "Mathematics": [
+        "Algebra",
+        "Calculus",
+        "Geometry",
+        "Statistics",
+        "Trigonometry"
+    ],
+    "Science": [
+        "Biology",
+        "Chemistry",
+        "Physics",
+        "Astronomy",
+        "Earth Science"
+    ],
+    "Computer Science": [
+        "Programming Basics",
+        "Data Structures",
+        "Algorithms",
+        "Machine Learning",
+        "Web Development"
+    ],
+    "Languages": [
+        "English Grammar",
+        "Spanish",
+        "French",
+        "German",
+        "Chinese"
+    ],
+    "History": [
+        "World History",
+        "Ancient Civilizations",
+        "American History",
+        "European History",
+        "Modern History"
+    ]
+}

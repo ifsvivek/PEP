@@ -1,0 +1,41 @@
+{% extends 'base.html' %}
+
+{% block title %}PEP - Home{% endblock %}
+
+{% block content %}
+<div class="flex flex-col md:flex-row items-center">
+    <div class="md:w-1/2">
+        <h1 class="text-4xl font-bold mb-4">Welcome to Personalized Education Platform</h1>
+        <p class="text-xl text-gray-600 mb-6">Learn at your own pace with AI-generated educational content tailored to your interests.</p>
+        
+        {% if not session.username %}
+        <div class="space-x-4">
+            <a href="{{ url_for('register') }}" class="inline-block bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded">Get Started</a>
+            <a href="{{ url_for('login') }}" class="inline-block border border-blue-600 text-blue-600 hover:bg-blue-50 font-semibold py-2 px-4 rounded">Login</a>
+        </div>
+        {% else %}
+        <div>
+            <a href="{{ url_for('dashboard') }}" class="inline-block bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded">Go to Dashboard</a>
+        </div>
+        {% endif %}
+    </div>
+    <div class="md:w-1/2 mt-6 md:mt-0">
+        <img src="{{ url_for('static', filename='img/education.svg') }}" alt="Education illustration" class="w-full">
+    </div>
+</div>
+
+<div class="grid grid-cols-1 md:grid-cols-3 gap-6 mt-12">
+    <div class="bg-white rounded-lg shadow-md p-6">
+        <h5 class="text-xl font-semibold mb-3">Personalized Content</h5>
+        <p class="text-gray-600">Learn topics of your interest with content generated specifically for you.</p>
+    </div>
+    <div class="bg-white rounded-lg shadow-md p-6">
+        <h5 class="text-xl font-semibold mb-3">Test Your Knowledge</h5>
+        <p class="text-gray-600">Take quizzes to reinforce your understanding and track your progress.</p>
+    </div>
+    <div class="bg-white rounded-lg shadow-md p-6">
+        <h5 class="text-xl font-semibold mb-3">Learn Anywhere</h5>
+        <p class="text-gray-600">Access your personalized educational content on any device, anytime.</p>
+    </div>
+</div>
+{% endblock %}

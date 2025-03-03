@@ -1,0 +1,71 @@
+{% extends 'base.html' %}
+
+{% block title %}PEP - Learn {{ topic }}{% endblock %}
+
+{% block content %}
+<div class="flex justify-between items-center mb-6">
+    <h1 class="text-3xl font-bold">{{ content.title }}</h1>
+    <a href="{{ url_for('quiz', topic=topic.replace(' ', '_')) }}" 
+       class="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded">
+        Take Quiz
+    </a>
+</div>
+
+<div class="bg-white rounded-lg shadow-md p-6 mb-6">
+    <h3 class="text-xl font-semibold mb-3">Introduction</h3>
+    <p class="text-gray-700 whitespace-pre-line">{{ content.introduction }}</p>
+</div>
+
+{% for section in content.sections %}
+<div class="bg-white rounded-lg shadow-md mb-6 overflow-hidden">
+    <div class="bg-gray-50 px-6 py-4 border-b border-gray-200">
+        <h3 class="text-xl font-semibold">{{ section.heading }}</h3>
+    </div>
+    <div class="p-6">
+        <div class="text-gray-700 whitespace-pre-line">{{ section.content }}</div>
+        
+        {% if section.examples %}
+        <div class="mt-4">
+            <h4 class="text-lg font-medium mb-2">Examples:</h4>
+            <ul class="list-disc pl-5 space-y-1">
+                {% for example in section.examples %}
+                <li class="text-gray-700">{{ example }}</li>
+                {% endfor %}
+            </ul>
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endfor %}
+
+<div class="bg-white rounded-lg shadow-md p-6 mb-6">
+    <h3 class="text-xl font-semibold mb-3">Summary</h3>
+    <p class="text-gray-700 whitespace-pre-line">{{ content.summary }}</p>
+</div>
+
+{% if content.further_reading %}
+<div class="bg-white rounded-lg shadow-md overflow-hidden">
+    <div class="bg-gray-50 px-6 py-4 border-b border-gray-200">
+        <h3 class="text-xl font-semibold">Further Reading</h3>
+    </div>
+    <div class="p-6">
+        <ul class="list-disc pl-5 space-y-1">
+            {% for resource in content.further_reading %}
+            <li class="text-gray-700">{{ resource }}</li>
+            {% endfor %}
+        </ul>
+    </div>
+</div>
+{% endif %}
+
+<div class="mt-8 text-center">
+    <a href="{{ url_for('dashboard') }}" 
+       class="bg-gray-500 hover:bg-gray-600 text-white font-semibold py-2 px-4 rounded mr-3">
+        Back to Dashboard
+    </a>
+    <a href="{{ url_for('quiz', topic=topic.replace(' ', '_')) }}" 
+       class="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded">
+        Take Quiz
+    </a>
+</div>
+{% endblock %}

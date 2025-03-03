@@ -1,0 +1,119 @@
+{% extends 'base.html' %}
+
+{% block title %}PEP - Quiz: {{ topic }}{% endblock %}
+
+{% block content %}
+<div class="container mx-auto px-4 py-8">
+    <h1 class="text-3xl font-bold mb-2">Quiz: {{ topic }}</h1>
+    <p class="text-lg text-gray-600 mb-6">Test your knowledge with these questions.</p>
+
+    <form id="quizForm" method="post" action="{{ url_for('submit_quiz', topic=topic.replace(' ', '_')) }}">
+        {% for i in range(quiz.questions|length) %}
+            {% set question = quiz.questions[i] %}
+            <div class="bg-white rounded-lg shadow-md mb-6 overflow-hidden question-container">
+                <div class="bg-gray-50 px-6 py-4 border-b border-gray-200">
+                    <h3 class="font-semibold">Question {{ i+1 }}</h3>
+                </div>
+                <div class="p-6">
+                    <p class="text-gray-800 mb-4">{{ question.question }}</p>
+                    
+                    <div class="space-y-2">
+                        {% for j in range(question.options|length) %}
+                            {% set option = question.options[j] %}
+                            <div class="flex items-center p-3 border border-gray-200 rounded-md hover:bg-gray-50">
+                                <input class="form-radio h-4 w-4 text-blue-600" 
+                                       type="radio" 
+                                       name="q{{ i }}" 
+                                       id="q{{ i }}_option{{ j }}" 
+                                       value="{{ option }}" 
+                                       required>
+                                <label class="ml-3 block text-gray-700 cursor-pointer w-full" 
+                                       for="q{{ i }}_option{{ j }}">
+                                    {{ option }}
+                                </label>
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+        
+        <div class="text-center mt-8">
+            <button type="submit" 
+                    class="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-6 rounded-md w-1/2 mx-auto">
+                Submit Answers
+            </button>
+        </div>
+    </form>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Better uniqueness by using the topic name + timestamp in the storage key
+    const STORAGE_KEY = 'quiz_{{ topic.replace(" ", "_") }}_{{ quiz.questions|length }}';
+    const form = document.getElementById('quizForm');
+    const totalQuestions = Number('{{ quiz.questions|length }}');
+    
+    // Function to save the current state of all answers
+    function saveAnswers() {
+        const answers = {};
+        for (let i = 0; i < totalQuestions; i++) {
+            const selectedOption = document.querySelector(`input[name="q${i}"]:checked`);
+            if (selectedOption) {
+                answers[`q${i}`] = selectedOption.value;
+            }
+        }
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(answers));
+    }
+    
+    // Function to load saved answers
+    function loadAnswers() {
+        try {
+            const savedData = localStorage.getItem(STORAGE_KEY);
+            if (!savedData) return;
+            
+            const answers = JSON.parse(savedData);
+            Object.entries(answers).forEach(([name, value]) => {
+                const options = document.querySelectorAll(`input[name="${name}"]`);
+                options.forEach(option => {
+                    if (option.value === value) {
+                        option.checked = true;
+                    }
+                });
+            });
+        } catch (err) {
+            console.error("Error loading saved answers:", err);
+            localStorage.removeItem(STORAGE_KEY);
+        }
+    }
+    
+    // Add listeners to each radio button
+    const allRadios = document.querySelectorAll('input[type="radio"]');
+    allRadios.forEach(radio => {
+        radio.addEventListener('change', saveAnswers);
+    });
+    
+    // Validate form submission
+    form.addEventListener('submit', function(event) {
+        let answeredCount = 0;
+        
+        for (let i = 0; i < totalQuestions; i++) {
+            if (document.querySelector(`input[name="q${i}"]:checked`)) {
+                answeredCount++;
+            }
+        }
+        
+        if (answeredCount < totalQuestions) {
+            event.preventDefault();
+            alert(`Please answer all questions. You've answered ${answeredCount} out of ${totalQuestions}.`);
+        } else {
+            // Clear only this quiz's data from localStorage on successful submission
+            localStorage.removeItem(STORAGE_KEY);
+        }
+    });
+    
+    // Load saved answers when page loads
+    loadAnswers();
+});
+</script>
+{% endblock %}

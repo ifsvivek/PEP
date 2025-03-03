@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}PEP - Personalized Education Platform{% endblock %}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+    <!-- Replace Bootstrap with Tailwind CSS CDN -->
+    <script src="https://unpkg.com/@tailwindcss/browser@4"></script>
+</head>
+<body class="bg-gray-50 flex flex-col min-h-screen">
+    <nav class="bg-blue-600 text-white shadow-md">
+        <div class="container mx-auto px-4 py-3">
+            <div class="flex justify-between items-center">
+                <a class="font-bold text-2xl" href="{{ url_for('index') }}">PEP</a>
+                <button id="menu-button" class="md:hidden focus:outline-none">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path>
+                    </svg>
+                </button>
+                <div class="hidden md:flex flex-grow justify-between items-center" id="navbar-content">
+                    <ul class="flex space-x-6">
+                        <li>
+                            <a class="hover:text-blue-200" href="{{ url_for('index') }}">Home</a>
+                        </li>
+                        {% if session.username %}
+                        <li>
+                            <a class="hover:text-blue-200" href="{{ url_for('dashboard') }}">Dashboard</a>
+                        </li>
+                        <li>
+                            <a class="hover:text-blue-200" href="{{ url_for('topics') }}">Topics</a>
+                        </li>
+                        {% endif %}
+                    </ul>
+                    <ul class="flex space-x-6">
+                        {% if session.username %}
+                        <li>
+                            <span>Hello, {{ session.username }}</span>
+                        </li>
+                        <li>
+                            <a class="hover:text-blue-200" href="{{ url_for('logout') }}">Logout</a>
+                        </li>
+                        {% else %}
+                        <li>
+                            <a class="hover:text-blue-200" href="{{ url_for('login') }}">Login</a>
+                        </li>
+                        <li>
+                            <a class="hover:text-blue-200" href="{{ url_for('register') }}">Register</a>
+                        </li>
+                        {% endif %}
+                    </ul>
+                </div>
+            </div>
+            <!-- Mobile menu -->
+            <div class="hidden md:hidden mt-3 pb-2" id="mobile-menu">
+                <ul class="space-y-2">
+                    <li>
+                        <a class="block hover:text-blue-200" href="{{ url_for('index') }}">Home</a>
+                    </li>
+                    {% if session.username %}
+                    <li>
+                        <a class="block hover:text-blue-200" href="{{ url_for('dashboard') }}">Dashboard</a>
+                    </li>
+                    <li>
+                        <a class="block hover:text-blue-200" href="{{ url_for('topics') }}">Topics</a>
+                    </li>
+                    <li class="pt-2 border-t border-blue-500">
+                        <span>Hello, {{ session.username }}</span>
+                    </li>
+                    <li>
+                        <a class="block hover:text-blue-200" href="{{ url_for('logout') }}">Logout</a>
+                    </li>
+                    {% else %}
+                    <li>
+                        <a class="block hover:text-blue-200" href="{{ url_for('login') }}">Login</a>
+                    </li>
+                    <li>
+                        <a class="block hover:text-blue-200" href="{{ url_for('register') }}">Register</a>
+                    </li>
+                    {% endif %}
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container mx-auto px-4 py-6 flex-grow">
+        {% with messages = get_flashed_messages() %}
+        {% if messages %}
+            {% for message in messages %}
+            <div class="bg-blue-100 border-l-4 border-blue-500 text-blue-700 p-4 mb-4 relative" role="alert">
+                {{ message }}
+                <button type="button" class="absolute top-0 right-0 mt-2 mr-2 text-blue-700 hover:text-blue-900" onclick="this.parentElement.remove()">
+                    <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                    </svg>
+                </button>
+            </div>
+            {% endfor %}
+        {% endif %}
+        {% endwith %}
+        
+        {% block content %}{% endblock %}
+    </div>
+
+    <footer class="bg-gray-100 py-6 border-t border-gray-200 mt-8">
+        <div class="container mx-auto px-4 text-center">
+            <p class="text-gray-600">Personalized Education Platform &copy; 2023</p>
+        </div>
+    </footer>
+
+    <script>
+        // Mobile menu toggle
+        const menuButton = document.getElementById('menu-button');
+        const mobileMenu = document.getElementById('mobile-menu');
+        
+        if (menuButton && mobileMenu) {
+            menuButton.addEventListener('click', () => {
+                mobileMenu.classList.toggle('hidden');
+            });
+        }
+    </script>
+    {% block scripts %}{% endblock %}
+</body>
+</html>

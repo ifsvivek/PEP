@@ -1,0 +1,45 @@
+{% extends 'base.html' %}
+
+{% block title %}PEP - Quiz Results{% endblock %}
+
+{% block content %}
+<div class="text-center mb-10">
+    <h1 class="text-3xl font-bold mb-6">Quiz Results: {{ topic }}</h1>
+    
+    <div class="text-5xl font-bold mb-6">
+        {{ score }} / {{ total }}
+    </div>
+    
+    <div class="w-2/3 mx-auto bg-gray-200 rounded-full h-4 mb-6">
+        {% set percentage = (score / total) * 100 %}
+        <div class="h-4 rounded-full {% if percentage >= 70 %}bg-green-600{% elif percentage >= 40 %}bg-yellow-500{% else %}bg-red-500{% endif %}" 
+             style="width: {{ percentage }}%">
+        </div>
+    </div>
+    
+    <div class="mt-4">
+        {% if percentage >= 70 %}
+            <h3 class="text-2xl text-green-600 font-semibold">Excellent! You've mastered this topic.</h3>
+        {% elif percentage >= 40 %}
+            <h3 class="text-2xl text-yellow-600 font-semibold">Good effort! Some areas need review.</h3>
+        {% else %}
+            <h3 class="text-2xl text-red-600 font-semibold">Keep studying! You'll improve with practice.</h3>
+        {% endif %}
+    </div>
+</div>
+
+<div class="flex flex-col items-center space-y-4 w-1/2 mx-auto">
+    <a href="{{ url_for('learn', topic=topic.replace(' ', '_')) }}" 
+       class="w-full py-3 border border-blue-600 text-blue-600 hover:bg-blue-50 text-center font-semibold rounded">
+        Review Content
+    </a>
+    <a href="{{ url_for('quiz', topic=topic.replace(' ', '_')) }}" 
+       class="w-full py-3 border border-blue-600 text-blue-600 hover:bg-blue-50 text-center font-semibold rounded">
+        Try Quiz Again
+    </a>
+    <a href="{{ url_for('dashboard') }}" 
+       class="w-full py-3 bg-blue-600 hover:bg-blue-700 text-white text-center font-semibold rounded">
+        Back to Dashboard
+    </a>
+</div>
+{% endblock %}

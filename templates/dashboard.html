@@ -1,0 +1,89 @@
+{% extends 'base.html' %}
+
+{% block title %}PEP - Dashboard{% endblock %}
+
+{% block content %}
+<h1 class="text-3xl font-bold mb-2">Your Learning Dashboard</h1>
+<p class="text-lg text-gray-600 mb-6">Welcome back, {{ session.username }}! Continue your learning journey.</p>
+
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+    <div class="lg:col-span-2 space-y-6">
+        <div class="bg-white rounded-lg shadow-md overflow-hidden">
+            <div class="bg-gray-50 px-4 py-3 border-b border-gray-200">
+                <h5 class="font-semibold">Your Topics</h5>
+            </div>
+            <div class="p-4">
+                {% if user.topics %}
+                <div class="space-y-2">
+                    {% for topic in user.topics %}
+                    <a href="{{ url_for('learn', topic=topic.replace(' ', '_')) }}" 
+                       class="block bg-white hover:bg-gray-50 border border-gray-200 rounded-md px-4 py-3 flex justify-between items-center">
+                        <span>{{ topic }}</span>
+                        <div>
+                            <span class="bg-blue-100 text-blue-800 text-xs font-semibold px-2.5 py-0.5 rounded-full">{{ user.progress[topic] }}%</span>
+                            {% if topic in user.quiz_scores %}
+                            <span class="bg-green-100 text-green-800 text-xs font-semibold px-2.5 py-0.5 rounded-full ml-2">Quiz: {{ user.quiz_scores[topic].percentage }}%</span>
+                            {% else %}
+                            <span class="bg-gray-100 text-gray-800 text-xs font-semibold px-2.5 py-0.5 rounded-full ml-2">Not tested</span>
+                            {% endif %}
+                        </div>
+                    </a>
+                    {% endfor %}
+                </div>
+                {% else %}
+                <p>You haven't selected any topics yet. <a href="{{ url_for('topics') }}" class="text-blue-600 hover:underline">Browse topics</a> to get started.</p>
+                {% endif %}
+            </div>
+        </div>
+        
+        <div class="bg-white rounded-lg shadow-md overflow-hidden">
+            <div class="bg-gray-50 px-4 py-3 border-b border-gray-200">
+                <h5 class="font-semibold">Progress Summary</h5>
+            </div>
+            <div class="p-4">
+                {% if user.topics %}
+                <div class="w-full bg-gray-200 rounded-full h-2.5 mb-4">
+                    {% set total_progress = (user.progress.values() | sum) / user.topics | length %}
+                    <div class="bg-blue-600 h-2.5 rounded-full" style="width: {{ total_progress }}%"></div>
+                </div>
+                <p>You've completed {{ total_progress | round }}% of your selected topics.</p>
+                {% else %}
+                <p>Start learning to track your progress!</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    
+    <div class="space-y-6">
+        <div class="bg-white rounded-lg shadow-md overflow-hidden">
+            <div class="bg-gray-50 px-4 py-3 border-b border-gray-200">
+                <h5 class="font-semibold">Quick Actions</h5>
+            </div>
+            <div class="p-4 space-y-3">
+                <a href="{{ url_for('topics') }}" 
+                   class="block w-full bg-blue-600 hover:bg-blue-700 text-white text-center font-semibold py-2 px-4 rounded">
+                    Browse Topics
+                </a>
+                {% if user.topics %}
+                <a href="{{ url_for('learn', topic=user.topics[-1].replace(' ', '_')) }}" 
+                   class="block w-full border border-blue-600 text-blue-600 hover:bg-blue-50 text-center font-semibold py-2 px-4 rounded">
+                    Continue Learning
+                </a>
+                {% endif %}
+            </div>
+        </div>
+        
+        <div class="bg-white rounded-lg shadow-md overflow-hidden">
+            <div class="bg-gray-50 px-4 py-3 border-b border-gray-200">
+                <h5 class="font-semibold">Account Information</h5>
+            </div>
+            <div class="p-4">
+                <p class="mb-2"><span class="font-medium">Username:</span> {{ user.username }}</p>
+                <p class="mb-2"><span class="font-medium">Email:</span> {{ user.email }}</p>
+                <p class="mb-2"><span class="font-medium">Joined:</span> {{ user.joined_date }}</p>
+                <p><span class="font-medium">Topics Selected:</span> {{ user.topics | length }}</p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

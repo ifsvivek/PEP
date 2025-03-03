@@ -1,0 +1,9 @@
+flask
+werkzeug
+langchain
+langchain-core
+langchain-community
+langsmith
+python-dotenv
+groqgroq
+langchain-groq
