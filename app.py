@@ -14,6 +14,14 @@ app.config.from_object(Config)
 os.makedirs('data/users', exist_ok=True)
 os.makedirs('data/content', exist_ok=True)
 
+@app.after_request
+def add_no_cache_headers(response):
+    """Add headers to prevent browser caching during development"""
+    response.headers['Cache-Control'] = 'no-store, no-cache, must-revalidate, max-age=0'
+    response.headers['Pragma'] = 'no-cache'
+    response.headers['Expires'] = '0'
+    return response
+
 @app.route('/')
 def index():
     if 'username' in session:
@@ -72,13 +80,67 @@ def logout():
     session.pop('username', None)
     return redirect(url_for('index'))
 
+def ensure_user_data_integrity(user_data):
+    """Ensure user data has all required fields with proper types"""
+    # Fix basic structure
+    if 'topics' not in user_data:
+        user_data['topics'] = []
+    
+    if 'progress' not in user_data:
+        user_data['progress'] = {}
+        
+    if 'quiz_scores' not in user_data:
+        user_data['quiz_scores'] = {}
+    
+    # Fix topics and progress relationship
+    for topic in user_data['topics']:
+        if topic not in user_data['progress']:
+            user_data['progress'][topic] = 0
+    
+    # Fix quiz scores
+    for topic, data in list(user_data.get('quiz_scores', {}).items()):
+        if not isinstance(data, dict):
+            # Remove invalid entries
+            user_data['quiz_scores'].pop(topic, None)
+            continue
+            
+        # Ensure percentage is a float
+        if 'percentage' in data:
+            try:
+                data['percentage'] = float(data['percentage'])
+            except (ValueError, TypeError):
+                # Fix percentage based on score/total
+                if 'score' in data and 'total' in data and data['total'] > 0:
+                    data['percentage'] = float((data['score'] / data['total']) * 100)
+                else:
+                    # Default to 0 if we can't calculate
+                    data['percentage'] = 0.0
+    
+    return user_data
+
 @app.route('/dashboard')
 def dashboard():
     if 'username' not in session:
         return redirect(url_for('login'))
     
     username = session['username']
-    user_data = read_json(f'data/users/{username}.json')
+    user_file = f'data/users/{username}.json'
+    
+    if not os.path.exists(user_file):
+        flash('User data not found. Please log in again.')
+        return redirect(url_for('logout'))
+    
+    user_data = read_json(user_file)
+    
+    # Fix potential data structure issues
+    user_data = ensure_user_data_integrity(user_data)
+    
+    # Save fixed data
+    write_json(user_file, user_data)
+    
+    # Debug output
+    app.logger.debug(f"User data for {username}: {json.dumps(user_data)}")
+    
     return render_template('dashboard.html', user=user_data)
 
 @app.route('/topics')

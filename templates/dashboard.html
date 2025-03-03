@@ -10,6 +10,7 @@
 
 <!-- Summary Cards -->
 <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+    <!-- Topics Enrolled Card -->
     <div class="bg-white rounded-xl shadow-md p-6 border-l-4 border-primary-500 transform transition-all hover:shadow-lg">
         <div class="flex items-center mb-4">
             <div class="rounded-full bg-primary-100 p-3 mr-4">
@@ -19,11 +20,12 @@
             </div>
             <div>
                 <h3 class="text-lg font-semibold text-gray-800">Topics Enrolled</h3>
-                <p class="text-2xl font-bold text-primary-600">{{ user.topics|length }}</p>
+                <p class="text-2xl font-bold text-primary-600">{{ user.topics|default([])|length }}</p>
             </div>
         </div>
     </div>
     
+    <!-- Completed Topics Card -->
     <div class="bg-white rounded-xl shadow-md p-6 border-l-4 border-green-500 transform transition-all hover:shadow-lg">
         <div class="flex items-center mb-4">
             <div class="rounded-full bg-green-100 p-3 mr-4">
@@ -34,18 +36,13 @@
             <div>
                 <h3 class="text-lg font-semibold text-gray-800">Completed</h3>
                 <p class="text-2xl font-bold text-green-600">
-                    {% set completed = 0 %}
-                    {% for topic, prog in user.progress.items() %}
-                        {% if prog == 100 %}
-                            {% set completed = completed + 1 %}
-                        {% endif %}
-                    {% endfor %}
-                    {{ completed }}
+                    {{ user.topics|length }}
                 </p>
             </div>
         </div>
     </div>
     
+    <!-- Average Score Card -->
     <div class="bg-white rounded-xl shadow-md p-6 border-l-4 border-yellow-500 transform transition-all hover:shadow-lg">
         <div class="flex items-center mb-4">
             <div class="rounded-full bg-yellow-100 p-3 mr-4">
@@ -56,13 +53,19 @@
             <div>
                 <h3 class="text-lg font-semibold text-gray-800">Average Score</h3>
                 <p class="text-2xl font-bold text-yellow-600">
-                    {% set total_score = 0 %}
-                    {% set count = 0 %}
+                    {% set total_score = namespace(value=0) %}
+                    {% set count = namespace(value=0) %}
+                    
                     {% for topic, data in user.quiz_scores.items() %}
-                        {% set total_score = total_score + data.percentage %}
-                        {% set count = count + 1 %}
+                        {% set total_score.value = total_score.value + data.percentage %}
+                        {% set count.value = count.value + 1 %}
                     {% endfor %}
-                    {{ (total_score / count) | round if count > 0 else 0 }}%
+                    
+                    {% if count.value > 0 %}
+                        {{ (total_score.value / count.value) | round }}%
+                    {% else %}
+                        0%
+                    {% endif %}
                 </p>
             </div>
         </div>
