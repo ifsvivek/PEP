@@ -43,8 +43,22 @@
         </div>
     </div>
 
+    <!-- Hint Toast -->
+    <div id="hintToast" class="hidden fixed bottom-4 right-4 max-w-md bg-blue-50 border-l-4 border-blue-500 p-4 shadow-lg rounded-lg transform transition-all duration-300">
+        <div class="flex">
+            <div class="flex-shrink-0">
+                <svg class="h-5 w-5 text-blue-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                </svg>
+            </div>
+            <div class="ml-3">
+                <p id="hintText" class="text-sm text-blue-700"></p>
+            </div>
+        </div>
+    </div>
+
     <!-- Output -->
-    <div class="bg-white rounded-lg shadow-md p-4">
+    <div class="bg-white rounded-lg shadow-md p-4 mt-4">
         <h3 class="text-lg font-semibold mb-2">Output</h3>
         <pre id="output" class="bg-gray-100 p-4 rounded-md min-h-[100px]"></pre>
     </div>
@@ -54,6 +68,24 @@
 
 {% block scripts %}
 <script>
+function showHint(message) {
+    const toast = document.getElementById('hintToast');
+    const hintText = document.getElementById('hintText');
+    
+    hintText.textContent = message;
+    toast.classList.remove('hidden');
+    toast.classList.add('slide-in');
+    
+    setTimeout(() => {
+        toast.classList.remove('slide-in');
+        toast.classList.add('slide-out');
+        setTimeout(() => {
+            toast.classList.add('hidden');
+            toast.classList.remove('slide-out');
+        }, 300);
+    }, 5000);
+}
+
 document.getElementById('languageSelect').addEventListener('change', function() {
     window.location.href = `/code/${this.value}`;
 });
@@ -78,20 +110,60 @@ document.getElementById('runCode').addEventListener('click', async function() {
 
 document.getElementById('getHint').addEventListener('click', async function() {
     const code = document.getElementById('codeEditor').value;
-    const response = await fetch('/get_hint', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-            code: code,
-            language: '{{ language }}',
-            problem_id: '{{ problem.id }}'
-        })
-    });
-    
-    const result = await response.json();
-    alert(result.hint);
+    try {
+        const response = await fetch('/get_hint', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                code: code,
+                language: '{{ language }}',
+                problem_id: '{{ problem.id }}'
+            })
+        });
+        
+        const result = await response.json();
+        if (result.error) {
+            showHint('Error: ' + result.error);
+        } else {
+            showHint(result.hint);
+        }
+    } catch (error) {
+        showHint('Failed to get hint. Please try again.');
+    }
 });
 </script>
+
+<style>
+.slide-in {
+    animation: slideIn 0.3s forwards;
+}
+
+.slide-out {
+    animation: slideOut 0.3s forwards;
+}
+
+@keyframes slideIn {
+    from {
+        transform: translateX(100%);
+        opacity: 0;
+    }
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+@keyframes slideOut {
+    from {
+        transform: translateX(0);
+        opacity: 1;
+    }
+    to {
+        transform: translateX(100%);
+        opacity: 0;
+    }
+}
+</style>
 {% endblock %}
