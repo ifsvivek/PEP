@@ -66,7 +66,7 @@ PEP is a Flask-based web application that delivers personalized educational cont
 1. Clone the repository:
 
     ```bash
-    git clone <repository-url>
+    git clone https://github.com/ifsvivek/PEP
     cd PEP
     ```
 
