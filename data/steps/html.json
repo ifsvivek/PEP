@@ -1,0 +1,71 @@
+{
+    "HTML": {
+      "Introduction": {
+        "Definition": "HTML (HyperText Markup Language) is the standard language for creating web pages and web applications.",
+        "History": "HTML was created by Tim Berners-Lee in 1991 and has since evolved through multiple versions, with HTML5 being the latest major release.",
+        "Features": [
+          "Defines the structure of web pages",
+          "Uses elements and tags to organize content",
+          "Supports multimedia elements like images, videos, and audio",
+          "Works seamlessly with CSS and JavaScript"
+        ],
+        "Example": "<html><head><title>My Page</title></head><body><h1>Hello, World!</h1></body></html>"
+      },
+      "HowItWorks": {
+        "Structure": "HTML documents are structured using nested elements enclosed within angle brackets <>.",
+        "Rendering": "Browsers interpret HTML code and render it as a visual webpage.",
+        "Syntax": "HTML uses opening and closing tags to define elements.",
+        "Example": "<p>This is a paragraph.</p>"
+      },
+      "Usage": {
+        "WhyUseIt": "HTML is the foundation of web development, providing the basic structure and content of web pages.",
+        "HowItIsUsed": [
+          "Creating static and dynamic websites",
+          "Structuring web page content",
+          "Embedding multimedia elements",
+          "Working with forms for user input",
+          "Serving as the base for CSS and JavaScript to enhance interactivity"
+        ],
+        "Example": "<img src='image.jpg' alt='Sample Image'>"
+      },
+      "Basics": {
+        "Elements": {
+          "Definition": "HTML elements are the building blocks of a web page, defined by tags.",
+          "Example": "<h1>Heading</h1> <p>Paragraph</p>"
+        },
+        "Attributes": {
+          "Definition": "Attributes provide additional information about elements.",
+          "Example": "<a href='https://example.com'>Visit Example</a>"
+        },
+        "Headings": {
+          "Definition": "HTML provides six levels of headings, from <h1> (largest) to <h6> (smallest).",
+          "Example": "<h1>Main Title</h1> <h2>Subheading</h2>"
+        },
+        "Paragraphs": {
+          "Definition": "The <p> tag defines paragraphs of text.",
+          "Example": "<p>This is a paragraph.</p>"
+        },
+        "Lists": {
+          "Definition": "Lists are used to display items in an ordered or unordered format.",
+          "Types": ["Ordered List (<ol>)", "Unordered List (<ul>)", "Definition List (<dl>)"],
+          "Example": "<ul><li>Item 1</li><li>Item 2</li></ul>"
+        },
+        "Links": {
+          "Definition": "Links (<a>) are used to navigate between web pages.",
+          "Example": "<a href='https://example.com'>Click Here</a>"
+        },
+        "Images": {
+          "Definition": "The <img> tag is used to embed images in a webpage.",
+          "Example": "<img src='image.jpg' alt='Description of image'>"
+        },
+        "Forms": {
+          "Definition": "Forms collect user input through text fields, checkboxes, radio buttons, and more.",
+          "Example": "<form><input type='text' placeholder='Enter name'><button>Submit</button></form>"
+        },
+        "Tables": {
+          "Definition": "HTML tables display data in rows and columns.",
+          "Example": "<table><tr><th>Name</th><th>Age</th></tr><tr><td>John</td><td>25</td></tr></table>"
+        }
+      }
+    }
+  }

@@ -71,9 +71,9 @@
         </style>
     </head>
     <body class="bg-gray-50 flex flex-col min-h-screen font-sans">
-        <nav class="bg-gradient-to-r from-primary-700 to-primary-900 text-white shadow-lg">
-            <div class="container mx-auto px-4 py-4">
-                <div class="flex justify-between items-center">
+        <nav class="bg-primary-600">
+            <div class="container mx-auto px-4">
+                <div class="flex justify-between items-center py-4">
                     <a class="font-bold text-2xl tracking-tight flex items-center" href="{{ url_for('index') }}">
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path
@@ -139,6 +139,17 @@
                             </li>
                             {% endif %}
                         </ul>
+                    </div>
+                    <div class="flex space-x-4">
+                        <a href="{{ url_for('dashboard') }}" class="text-white hover:text-gray-200">Dashboard</a>
+                        <a href="{{ url_for('topics') }}" class="text-white hover:text-gray-200">Topics</a>
+                        <div class="relative group">
+                            <button class="text-white hover:text-gray-200">Learning</button>
+                            <div class="absolute hidden group-hover:block w-48 bg-white shadow-lg rounded-lg mt-2">
+                                <a href="{{ url_for('topics') }}" class="block px-4 py-2 hover:bg-gray-100">Traditional Learning</a>
+                                <a href="{{ url_for('step_topics') }}" class="block px-4 py-2 hover:bg-gray-100">Step-by-Step Learning</a>
+                            </div>
+                        </div>
                     </div>
                 </div>
                 <!-- Mobile menu -->

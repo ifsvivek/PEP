@@ -296,71 +296,177 @@ def submit_quiz(topic):
     )
 
 
-@app.route('/coding')
+@app.route("/coding")
 def coding():
-    if 'username' not in session:
-        return redirect(url_for('login'))
-    return render_template('coding.html')
+    if "username" not in session:
+        return redirect(url_for("login"))
+    return render_template("coding.html")
 
-@app.route('/code/<language>')
+
+@app.route("/code/<language>")
 def code_editor(language):
-    if 'username' not in session:
-        return redirect(url_for('login'))
-    
+    if "username" not in session:
+        return redirect(url_for("login"))
+
     if language not in code_executor.supported_languages:
-        return redirect(url_for('code_editor', language='python'))
-    
+        return redirect(url_for("code_editor", language="python"))
+
     # Generate a new question for each visit
     problem = question_generator.generate_question(language)
-    
-    return render_template('code_editor.html', language=language, problem=problem)
+
+    return render_template("code_editor.html", language=language, problem=problem)
+
 
 # Update the execute_code route to handle dynamic problems
-@app.route('/execute_code', methods=['POST'])
+@app.route("/execute_code", methods=["POST"])
 def execute_code():
-    if 'username' not in session:
-        return jsonify({'error': 'Not authenticated'})
-    
+    if "username" not in session:
+        return jsonify({"error": "Not authenticated"})
+
     data = request.json
-    code = data.get('code')
-    language = data.get('language')
-    
+    code = data.get("code")
+    language = data.get("language")
+
     # Generate the same problem to get test cases
     problem = question_generator.generate_question(language)
-    
-    result = code_executor.execute_code(code, language, problem['test_cases'])
-    
-    if result.get('success'):
+
+    result = code_executor.execute_code(code, language, problem["test_cases"])
+
+    if result.get("success"):
         output = "Test Results:\n"
-        for i, test_result in enumerate(result['results'], 1):
+        for i, test_result in enumerate(result["results"], 1):
             output += f"\nTest {i}:\n"
             output += f"Input: {test_result['input']}\n"
             output += f"Expected: {test_result['expected']}\n"
             output += f"Actual: {test_result['actual']}\n"
-            output += "Status: " + ("✓ Passed" if test_result['expected'] == test_result['actual'] 
-                                  else "✗ Failed")
-        
-        if result['all_passed']:
+            output += "Status: " + (
+                "✓ Passed"
+                if test_result["expected"] == test_result["actual"]
+                else "✗ Failed"
+            )
+
+        if result["all_passed"]:
             output += "\n\nCongratulations! All tests passed! 🎉"
     else:
         output = f"Error:\n{result['error']}"
-    
-    return jsonify({'output': output})
 
-@app.route('/get_hint', methods=['POST'])
+    return jsonify({"output": output})
+
+
+@app.route("/get_hint", methods=["POST"])
 def get_hint():
-    if 'username' not in session:
-        return jsonify({'error': 'Not authenticated'})
-    
+    if "username" not in session:
+        return jsonify({"error": "Not authenticated"})
+
     data = request.json
-    code = data.get('code')
-    language = data.get('language')
-    
+    code = data.get("code")
+    language = data.get("language")
+
     # Generate the same problem to get description
     problem = question_generator.generate_question(language)
-    
-    hint = code_executor.generate_hint(code, problem['description'], language)
-    return jsonify({'hint': hint})
+
+    hint = code_executor.generate_hint(code, problem["description"], language)
+    return jsonify({"hint": hint})
+
+
+@app.route("/step-topics")
+def step_topics():
+    if "username" not in session:
+        return redirect(url_for("login"))
+
+    # Get available step-based topics from steps directory
+    step_topics = []
+    steps_dir = os.path.join("data", "steps")
+
+    for file in os.listdir(steps_dir):
+        if file.endswith(".json"):
+            topic_content = read_json(os.path.join(steps_dir, file))
+            topic_name = list(topic_content.keys())[0]  # Get first key as topic name
+            step_topics.append(
+                {
+                    "name": topic_name,
+                    "description": topic_content[topic_name]
+                    .get("Introduction", {})
+                    .get("Definition", ""),
+                }
+            )
+
+    return render_template("step_topics.html", topics=step_topics)
+
+
+@app.route("/steps/<topic>/<int:step>")
+def steps(topic, step):
+    if "username" not in session:
+        return redirect(url_for("login"))
+
+    username = session["username"]
+    topic_name = topic.replace("_", " ")
+
+    try:
+        content = read_json(f"data/steps/{topic.lower()}.json")
+    except:
+        flash("Topic content not found")
+        return redirect(url_for("step_topics"))
+
+    topic_content = content[topic_name]
+    learning_path = list(topic_content.keys())
+    total_steps = len(learning_path)
+
+    if step < 0 or step >= total_steps:
+        return redirect(url_for("steps", topic=topic, step=0))
+
+    current_section = learning_path[step]
+    section_content = topic_content[current_section]
+
+    # Format content structure
+    formatted_content = []
+    for key, value in section_content.items():
+        item = {"title": key, "content": value, "type": "text"}  # default type
+
+        if isinstance(value, list):
+            item["type"] = "list"
+        elif isinstance(value, dict):
+            item["type"] = "dict"
+            # Convert nested dict to list of items for easier template handling
+            item["dict_items"] = [{"key": k, "value": v} for k, v in value.items()]
+        elif key.lower() == "example":
+            item["type"] = "code"
+
+        formatted_content.append(item)
+
+    # Update user progress
+    user_data = read_json(f"data/users/{username}.json")
+    if "step_progress" not in user_data:
+        user_data["step_progress"] = {}
+
+    if topic_name not in user_data["step_progress"]:
+        user_data["step_progress"][topic_name] = {
+            "current_step": 0,
+            "total_steps": total_steps,
+            "completed": False,
+            "progress": 0.0,
+        }
+
+    if step > user_data["step_progress"][topic_name]["current_step"]:
+        user_data["step_progress"][topic_name]["current_step"] = step
+        user_data["step_progress"][topic_name]["progress"] = (step / total_steps) * 100
+
+        if step >= total_steps - 1:
+            user_data["step_progress"][topic_name]["completed"] = True
+            user_data["step_progress"][topic_name]["progress"] = 100.0
+
+    write_json(f"data/users/{username}.json", user_data)
+
+    return render_template(
+        "steps.html",
+        topic=topic_name,
+        current_step=step,
+        total_steps=total_steps,
+        progress=user_data["step_progress"][topic_name]["progress"],
+        learning_path=learning_path,
+        section_name=current_section,
+        content=formatted_content,
+    )
 
 
 if __name__ == "__main__":
