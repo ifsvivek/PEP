@@ -1,6 +1,5 @@
 flask
 werkzeug
-werkzeug.security
 langchain
 langchain-core
 langchain-community
@@ -9,4 +8,3 @@ python-dotenv
 groq
 langchain-groq
 subprocess.run
-flask
