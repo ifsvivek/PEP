@@ -1,0 +1,97 @@
+{% extends 'base.html' %}
+
+{% block title %}PEP - Live Coding{% endblock %}
+
+{% block content %}
+<div class="flex flex-col space-y-4">
+    <div class="flex justify-between items-center">
+        <h1 class="text-3xl font-bold">Live Coding: {{ language }}</h1>
+        <select id="languageSelect" class="px-4 py-2 border rounded-md">
+            <option value="python" {% if language == 'python' %}selected{% endif %}>Python</option>
+            <option value="javascript" {% if language == 'javascript' %}selected{% endif %}>JavaScript</option>
+            <option value="c" {% if language == 'c' %}selected{% endif %}>C</option>
+        </select>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <!-- Problem Description -->
+        <div class="bg-white rounded-lg shadow-md p-4">
+            <h2 class="text-xl font-semibold mb-4">Problem: {{ problem.title }}</h2>
+            <div class="prose">
+                {{ problem.description | safe }}
+            </div>
+            <div class="mt-4">
+                <h3 class="font-semibold">Example:</h3>
+                <pre class="bg-gray-100 p-2 rounded mt-2">{{ problem.example }}</pre>
+            </div>
+        </div>
+
+        <!-- Code Editor -->
+        <div class="bg-white rounded-lg shadow-md p-4">
+            <div class="mb-4">
+                <textarea id="codeEditor" class="w-full h-64 font-mono p-2 border rounded-md" 
+                          placeholder="Write your code here...">{{ problem.template }}</textarea>
+            </div>
+            <div class="flex justify-between">
+                <button id="runCode" class="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700">
+                    Run Code
+                </button>
+                <button id="getHint" class="border border-blue-600 text-blue-600 px-4 py-2 rounded-md hover:bg-blue-50">
+                    Get Hint
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Output -->
+    <div class="bg-white rounded-lg shadow-md p-4">
+        <h3 class="text-lg font-semibold mb-2">Output</h3>
+        <pre id="output" class="bg-gray-100 p-4 rounded-md min-h-[100px]"></pre>
+    </div>
+</div>
+
+{% endblock %}
+
+{% block scripts %}
+<script>
+document.getElementById('languageSelect').addEventListener('change', function() {
+    window.location.href = `/code/${this.value}`;
+});
+
+document.getElementById('runCode').addEventListener('click', async function() {
+    const code = document.getElementById('codeEditor').value;
+    const response = await fetch('/execute_code', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+            code: code,
+            language: '{{ language }}',
+            problem_id: '{{ problem.id }}'
+        })
+    });
+    
+    const result = await response.json();
+    document.getElementById('output').textContent = result.output;
+});
+
+document.getElementById('getHint').addEventListener('click', async function() {
+    const code = document.getElementById('codeEditor').value;
+    const response = await fetch('/get_hint', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+            code: code,
+            language: '{{ language }}',
+            problem_id: '{{ problem.id }}'
+        })
+    });
+    
+    const result = await response.json();
+    alert(result.hint);
+});
+</script>
+{% endblock %}

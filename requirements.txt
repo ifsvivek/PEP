@@ -5,5 +5,6 @@ langchain-core
 langchain-community
 langsmith
 python-dotenv
-groqgroq
+groq
 langchain-groq
+subprocess.run
