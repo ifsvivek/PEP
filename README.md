@@ -6,12 +6,21 @@ PEP is a Flask-based web application that delivers personalized educational cont
 
 ## Features
 
+### Core Features
+
 -   **User Authentication**: Complete registration and login system with secure password handling
 -   **Topic Selection**: Browse topics organized by categories (Mathematics, Science, Computer Science, etc.)
 -   **AI-Generated Content**: Comprehensive educational material created in real-time using Groq's LLM
 -   **Interactive Quizzes**: Automatically generated quizzes with multiple-choice questions to test understanding
 -   **Progress Tracking**: Monitor learning progress and quiz scores through a personalized dashboard
 -   **Responsive Design**: Modern UI with Tailwind CSS that works across devices
+
+### Advanced Learning Tools
+
+-   **Step-by-Step Learning**: Structured learning paths that break down complex topics into manageable steps
+-   **Live Coding Practice**: Interactive coding environment with multiple language support (Python, JavaScript, C)
+-   **Code Testing**: Automated test cases validate coding solutions in real-time
+-   **AI Coding Hints**: Get intelligent hints when stuck on coding problems
 
 ## Technology Stack
 
@@ -20,6 +29,7 @@ PEP is a Flask-based web application that delivers personalized educational cont
 -   **Frontend**: HTML, [Tailwind CSS](https://tailwindcss.com/), JavaScript
 -   **Storage**: JSON-based data persistence
 -   **Security**: Werkzeug password hashing, session management
+-   **Code Execution**: Secure sandboxed environment for running user code
 
 ## Project Structure
 
@@ -42,14 +52,23 @@ PEP is a Flask-based web application that delivers personalized educational cont
 │   ├── topics.html         # Topic selection interface
 │   ├── learn.html          # Content display page
 │   ├── quiz.html           # Quiz interface
-│   └── quiz_result.html    # Quiz results display
+│   ├── quiz_result.html    # Quiz results display
+│   ├── coding.html         # Coding practice selection page
+│   ├── code_editor.html    # Interactive code editor
+│   ├── step_topics.html    # Step-by-step learning topics
+│   └── steps.html          # Step-by-step learning interface
 ├── utils/                  # Utility modules
 │   ├── content_generator.py # AI content generation using LangChain + Groq
-│   └── json_handler.py     # JSON data management functions
+│   ├── json_handler.py     # JSON data management functions
+│   ├── code_executor.py    # Code execution and testing module
+│   ├── question_generator.py # Generates coding problems and test cases
+│   └── fix_user_data.py    # Script to repair user data issues
 └── data/                   # Data storage
     ├── topics.json         # List of available topics by category
     ├── content/            # Generated educational content
     │   └── username_topic.json  # Content files
+    ├── steps/              # Step-by-step learning content
+    │   └── topic.json      # Structured learning paths
     └── users/              # User data
         └── username.json   # User profiles
 ```
@@ -105,13 +124,28 @@ PEP is a Flask-based web application that delivers personalized educational cont
 -   Create a new account with a unique username, email address, and secure password
 -   Login with your credentials to access the platform
 
-### Learning with PEP
+### Traditional Learning Path
 
 1. Browse available topics organized by category
 2. Select a topic of interest to generate personalized educational content
 3. Read through the comprehensive content with examples and explanations
 4. Take the quiz to test your understanding
 5. View your results and track your progress on your dashboard
+
+### Step-by-Step Learning
+
+1. Navigate to the "Step-by-Step Learning" option in the Learning dropdown
+2. Choose a topic from the available structured learning paths
+3. Progress through each step in sequence, building understanding gradually
+4. Track your progress as you complete each step in the learning path
+
+### Live Coding Practice
+
+1. Access the "Live Coding" section from the navigation menu
+2. Select your preferred programming language (Python, JavaScript, or C)
+3. Read the problem description and write your solution in the code editor
+4. Run your code to test against the provided test cases
+5. Request hints if you get stuck on implementing your solution
 
 ### Content Organization
 
@@ -120,6 +154,8 @@ Each topic's educational content includes:
 -   Introduction explaining the topic's significance
 -   Multiple sections covering key concepts
 -   Practical examples for each concept
+-   Interactive elements for engagement
+-   Key terms with definitions
 -   Summary of the main ideas
 -   Recommended further reading
 
@@ -133,13 +169,22 @@ The platform uses two primary AI generation functions:
 
     - Introduction
     - 3-4 key concept sections with examples
+    - Interactive elements (reflection questions, activities)
+    - Key terms and definitions
     - Summary
     - Further reading suggestions
 
 2. `generate_quiz(content)`: Analyzes the content and creates:
+
     - Multiple-choice questions testing comprehension
     - 4 options per question with one correct answer
     - Balanced coverage of the content material
+
+3. `generate_question(language)`: Creates coding problems with:
+    - Clear problem description
+    - Template code to get started
+    - Test cases for validation
+    - Expected inputs and outputs
 
 ### JSON Data Structure
 
@@ -163,6 +208,14 @@ The platform uses two primary AI generation functions:
             "percentage": 80.0,
             "date": "2023-05-16"
         }
+    },
+    "step_progress": {
+        "Python": {
+            "current_step": 3,
+            "total_steps": 8,
+            "completed": false,
+            "progress": 37.5
+        }
     }
 }
 ```
@@ -173,15 +226,32 @@ The platform uses two primary AI generation functions:
 {
     "title": "Topic Name",
     "introduction": "Comprehensive introduction...",
+    "learning_objectives": ["Understand key concept 1", "Apply principle in context"],
     "sections": [
         {
             "heading": "Key Concept 1",
             "content": "Detailed explanation...",
-            "examples": ["Example 1", "Example 2"]
+            "examples": ["Example 1", "Example 2"],
+            "interactive_element": {
+                "type": "reflection_question",
+                "content": "How would you apply this concept?"
+            }
+        }
+    ],
+    "key_terms": [
+        {
+            "term": "Important Term",
+            "definition": "Clear definition of the term"
         }
     ],
     "summary": "Topic summary...",
-    "further_reading": ["Resource 1", "Resource 2"]
+    "further_reading": [
+        {
+            "title": "Resource Title",
+            "author": "Author Name",
+            "description": "Brief description of the resource"
+        }
+    ]
 }
 ```
 
@@ -200,6 +270,45 @@ The platform uses two primary AI generation functions:
 }
 ```
 
+#### Step-by-Step Learning Data
+
+```json
+{
+    "Topic Name": {
+        "Introduction": {
+            "Definition": "Clear definition of the topic",
+            "Importance": "Why this topic matters"
+        },
+        "Fundamental Concepts": {
+            "Concept 1": "Description of first concept",
+            "Concept 2": "Description of second concept",
+            "Example": "code or example goes here"
+        },
+        "Advanced Applications": {
+            "Application 1": "Description of first application",
+            "Application 2": "Description of second application"
+        }
+    }
+}
+```
+
+## Utility Scripts
+
+### Fix User Data Tool
+
+The platform includes a utility script to repair corrupted user data:
+
+```bash
+python -m utils.fix_user_data username
+```
+
+This tool will:
+
+-   Verify and restore the correct data structure
+-   Fix missing or incorrect progress tracking
+-   Repair quiz score calculations
+-   Ensure data type consistency
+
 ## Future Enhancements
 
 -   **Content Bookmarking**: Allow users to bookmark specific sections for later review
@@ -210,3 +319,5 @@ The platform uses two primary AI generation functions:
 -   **Enhanced Analytics**: Provide deeper insights into learning patterns and quiz performance
 -   **Offline Access**: Enable downloading content for offline learning
 -   **Mobile App**: Develop companion mobile applications
+-   **AI Tutoring**: Personalized AI tutor that responds to student questions
+-   **Collaborative Coding**: Allow users to share and collaborate on code solutions
