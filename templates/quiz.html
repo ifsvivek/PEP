@@ -3,49 +3,146 @@
 {% block title %}PEP - Quiz: {{ topic }}{% endblock %}
 
 {% block content %}
-<div class="container mx-auto px-4 py-8">
-    <h1 class="text-3xl font-bold mb-2">Quiz: {{ topic }}</h1>
-    <p class="text-lg text-gray-600 mb-6">Test your knowledge with these questions.</p>
+<div class="max-w-4xl mx-auto">
+    <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4">
+        <div>
+            <h1 class="text-3xl font-bold text-gray-800">Quiz: {{ topic }}</h1>
+            <p class="text-gray-600 mt-1">Test your knowledge with these questions.</p>
+        </div>
+        <div class="hidden md:block">
+            <div id="progress-display" class="text-gray-600 font-medium">
+                Question <span id="current-question">1</span> of {{ quiz.questions|length }}
+            </div>
+        </div>
+    </div>
+
+    <!-- Progress bar -->
+    <div class="w-full bg-gray-200 rounded-full h-2 mb-8">
+        <div id="progress-bar" class="bg-gradient-to-r from-primary-500 to-primary-600 h-2 rounded-full transition-all duration-300" style="width: 0%"></div>
+    </div>
 
     <form id="quizForm" method="post" action="{{ url_for('submit_quiz', topic=topic.replace(' ', '_')) }}">
         {% for i in range(quiz.questions|length) %}
             {% set question = quiz.questions[i] %}
-            <div class="bg-white rounded-lg shadow-md mb-6 overflow-hidden question-container">
-                <div class="bg-gray-50 px-6 py-4 border-b border-gray-200">
+            <div class="bg-white rounded-xl shadow-md mb-6 overflow-hidden question-container {% if i > 0 %}hidden{% endif %}" data-question="{{ i+1 }}">
+                <div class="bg-gradient-to-r from-gray-700 to-gray-800 px-6 py-4 text-white flex justify-between items-center">
                     <h3 class="font-semibold">Question {{ i+1 }}</h3>
+                    <div class="text-sm font-medium text-gray-200 md:hidden">
+                        {{ i+1 }} of {{ quiz.questions|length }}
+                    </div>
                 </div>
                 <div class="p-6">
-                    <p class="text-gray-800 mb-4">{{ question.question }}</p>
+                    <p class="text-gray-800 text-lg mb-6">{{ question.question }}</p>
                     
-                    <div class="space-y-2">
+                    <div class="space-y-3">
                         {% for j in range(question.options|length) %}
                             {% set option = question.options[j] %}
-                            <div class="flex items-center p-3 border border-gray-200 rounded-md hover:bg-gray-50">
-                                <input class="form-radio h-4 w-4 text-blue-600" 
+                            <div class="option-container">
+                                <input class="form-radio sr-only" 
                                        type="radio" 
                                        name="q{{ i }}" 
                                        id="q{{ i }}_option{{ j }}" 
                                        value="{{ option }}" 
                                        required>
-                                <label class="ml-3 block text-gray-700 cursor-pointer w-full" 
+                                <label class="block p-4 border-2 border-gray-200 rounded-lg cursor-pointer hover:border-primary-300 hover:bg-primary-50 transition-all option-label flex items-center" 
                                        for="q{{ i }}_option{{ j }}">
-                                    {{ option }}
+                                    <span class="option-indicator w-5 h-5 mr-3 rounded-full border-2 border-gray-300 flex-shrink-0"></span>
+                                    <span class="text-gray-700">{{ option }}</span>
                                 </label>
                             </div>
                         {% endfor %}
                     </div>
                 </div>
+                <div class="bg-gray-50 px-6 py-4 border-t border-gray-200 flex justify-between">
+                    <button type="button" 
+                            class="prev-btn text-gray-600 hover:text-primary-600 font-medium flex items-center transition-colors {% if i == 0 %}invisible{% endif %}">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+                        </svg>
+                        Previous
+                    </button>
+                    
+                    {% if i < quiz.questions|length - 1 %}
+                        <button type="button" 
+                                class="next-btn bg-primary-600 hover:bg-primary-700 text-white font-medium py-2 px-4 rounded-lg transition-colors flex items-center disabled:opacity-50 disabled:cursor-not-allowed">
+                            Next
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 ml-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                            </svg>
+                        </button>
+                    {% else %}
+                        <button type="submit" 
+                                class="submit-btn bg-green-600 hover:bg-green-700 text-white font-medium py-2 px-4 rounded-lg transition-colors flex items-center">
+                            Submit Answers
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 ml-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                            </svg>
+                        </button>
+                    {% endif %}
+                </div>
             </div>
         {% endfor %}
-        
-        <div class="text-center mt-8">
-            <button type="submit" 
-                    class="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-6 rounded-md w-1/2 mx-auto">
-                Submit Answers
-            </button>
-        </div>
     </form>
+    
+    <!-- Question navigation and summary -->
+    <div class="bg-white rounded-xl shadow-md p-6 mb-8">
+        <h3 class="font-semibold text-gray-800 mb-4">Question Navigator</h3>
+        <div class="flex flex-wrap gap-2" id="question-navigator">
+            {% for i in range(quiz.questions|length) %}
+                <button type="button" 
+                        class="question-nav-btn w-8 h-8 rounded-full flex items-center justify-center border text-sm font-medium {% if i == 0 %}bg-primary-600 text-white border-primary-600{% else %}border-gray-300 text-gray-700 hover:border-primary-400{% endif %}"
+                        data-question="{{ i+1 }}">
+                    {{ i+1 }}
+                </button>
+            {% endfor %}
+        </div>
+        <div class="mt-4 flex items-center text-sm text-gray-600">
+            <div class="flex items-center mr-4">
+                <div class="w-3 h-3 rounded-full bg-primary-600 mr-1"></div>
+                <span>Current</span>
+            </div>
+            <div class="flex items-center mr-4">
+                <div class="w-3 h-3 rounded-full bg-green-600 mr-1"></div>
+                <span>Answered</span>
+            </div>
+            <div class="flex items-center">
+                <div class="w-3 h-3 rounded-full border border-gray-300 mr-1"></div>
+                <span>Unanswered</span>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Instructions card -->
+    <div class="bg-blue-50 border border-blue-200 rounded-lg p-4 text-blue-800 text-sm">
+        <div class="flex items-start">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2 mt-0.5 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+            <div>
+                <p class="font-medium mb-1">Quiz Instructions:</p>
+                <ul class="list-disc pl-5">
+                    <li>Answer all questions to complete the quiz</li>
+                    <li>You can navigate between questions using the buttons or question navigator</li>
+                    <li>Your progress is saved automatically as you answer questions</li>
+                    <li>Submit your answers once you've completed all questions</li>
+                </ul>
+            </div>
+        </div>
+    </div>
 </div>
+
+<style>
+    .option-container input[type="radio"]:checked + .option-label {
+        border-color: #4f46e5;
+        background-color: #eef2ff;
+    }
+    
+    .option-container input[type="radio"]:checked + .option-label .option-indicator {
+        border-color: #4f46e5;
+        background-color: #4f46e5;
+        box-shadow: inset 0 0 0 3px white;
+    }
+</style>
 
 <script>
 document.addEventListener('DOMContentLoaded', function() {
@@ -53,6 +150,65 @@ document.addEventListener('DOMContentLoaded', function() {
     const STORAGE_KEY = 'quiz_{{ topic.replace(" ", "_") }}_{{ quiz.questions|length }}';
     const form = document.getElementById('quizForm');
     const totalQuestions = Number('{{ quiz.questions|length }}');
+    const progressBar = document.getElementById('progress-bar');
+    const currentQuestionDisplay = document.getElementById('current-question');
+    const questionContainers = document.querySelectorAll('.question-container');
+    const questionNavBtns = document.querySelectorAll('.question-nav-btn');
+    let currentQuestion = 1;
+    
+    // Update progress bar and display
+    function updateProgress() {
+        const progress = (getAnsweredCount() / totalQuestions) * 100;
+        progressBar.style.width = `${progress}%`;
+        updateQuestionNavigator();
+    }
+    
+    // Get number of answered questions
+    function getAnsweredCount() {
+        let count = 0;
+        for (let i = 0; i < totalQuestions; i++) {
+            if (document.querySelector(`input[name="q${i}"]:checked`)) {
+                count++;
+            }
+        }
+        return count;
+    }
+    
+    // Update question navigator
+    function updateQuestionNavigator() {
+        questionNavBtns.forEach((btn, index) => {
+            // Reset all buttons
+            btn.classList.remove('bg-primary-600', 'text-white', 'border-primary-600', 'bg-green-600', 'border-green-600');
+            
+            // Check if question is answered
+            const isAnswered = document.querySelector(`input[name="q${index}"]:checked`);
+            
+            // Current question
+            if (index + 1 === currentQuestion) {
+                btn.classList.add('bg-primary-600', 'text-white', 'border-primary-600');
+            } 
+            // Answered question
+            else if (isAnswered) {
+                btn.classList.add('bg-green-600', 'text-white', 'border-green-600');
+            }
+        });
+    }
+    
+    // Show a specific question
+    function showQuestion(questionNumber) {
+        questionContainers.forEach(container => {
+            const containerQuestion = parseInt(container.dataset.question);
+            container.classList.add('hidden');
+            
+            if (containerQuestion === questionNumber) {
+                container.classList.remove('hidden');
+            }
+        });
+        
+        currentQuestion = questionNumber;
+        currentQuestionDisplay.textContent = questionNumber;
+        updateQuestionNavigator();
+    }
     
     // Function to save the current state of all answers
     function saveAnswers() {
@@ -64,6 +220,7 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         }
         localStorage.setItem(STORAGE_KEY, JSON.stringify(answers));
+        updateProgress();
     }
     
     // Function to load saved answers
@@ -81,27 +238,47 @@ document.addEventListener('DOMContentLoaded', function() {
                     }
                 });
             });
+            updateProgress();
         } catch (err) {
             console.error("Error loading saved answers:", err);
             localStorage.removeItem(STORAGE_KEY);
         }
     }
     
-    // Add listeners to each radio button
+    // Add event listeners
+    
+    // Radio button change
     const allRadios = document.querySelectorAll('input[type="radio"]');
     allRadios.forEach(radio => {
         radio.addEventListener('change', saveAnswers);
     });
     
+    // Next/Previous button clicks
+    const nextBtns = document.querySelectorAll('.next-btn');
+    nextBtns.forEach(btn => {
+        btn.addEventListener('click', () => {
+            showQuestion(currentQuestion + 1);
+        });
+    });
+    
+    const prevBtns = document.querySelectorAll('.prev-btn');
+    prevBtns.forEach(btn => {
+        btn.addEventListener('click', () => {
+            showQuestion(currentQuestion - 1);
+        });
+    });
+    
+    // Question navigator clicks
+    questionNavBtns.forEach(btn => {
+        btn.addEventListener('click', () => {
+            const questionNum = parseInt(btn.dataset.question);
+            showQuestion(questionNum);
+        });
+    });
+    
     // Validate form submission
     form.addEventListener('submit', function(event) {
-        let answeredCount = 0;
-        
-        for (let i = 0; i < totalQuestions; i++) {
-            if (document.querySelector(`input[name="q${i}"]:checked`)) {
-                answeredCount++;
-            }
-        }
+        let answeredCount = getAnsweredCount();
         
         if (answeredCount < totalQuestions) {
             event.preventDefault();
@@ -112,8 +289,9 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
     
-    // Load saved answers when page loads
+    // Initialize
     loadAnswers();
+    updateProgress();
 });
 </script>
 {% endblock %}
