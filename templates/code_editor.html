@@ -7,9 +7,9 @@
     <div class="flex justify-between items-center">
         <h1 class="text-3xl font-bold">Live Coding: {{ language }}</h1>
         <select id="languageSelect" class="px-4 py-2 border rounded-md">
-            <option value="python" {% if language == 'python' %}selected{% endif %}>Python</option>
-            <option value="javascript" {% if language == 'javascript' %}selected{% endif %}>JavaScript</option>
-            <option value="c" {% if language == 'c' %}selected{% endif %}>C</option>
+            <option value="python" {% if language=='python' %}selected{% endif %}>Python</option>
+            <option value="javascript" {% if language=='javascript' %}selected{% endif %}>JavaScript</option>
+            <option value="c" {% if language=='c' %}selected{% endif %}>C</option>
         </select>
     </div>
 
@@ -29,8 +29,7 @@
         <!-- Code Editor -->
         <div class="bg-white rounded-lg shadow-md p-4">
             <div class="mb-4">
-                <textarea id="codeEditor" class="w-full h-64 font-mono p-2 border rounded-md" 
-                          placeholder="Write your code here...">{{ problem.template }}</textarea>
+                <textarea id="codeEditor" class="w-full h-64 font-mono p-2 border rounded-md" placeholder="Write your code here...">{{ problem.template }}</textarea>
             </div>
             <div class="flex justify-between">
                 <button id="runCode" class="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700">
@@ -48,7 +47,7 @@
         <div class="flex">
             <div class="flex-shrink-0">
                 <svg class="h-5 w-5 text-blue-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                 </svg>
             </div>
             <div class="ml-3">
@@ -68,50 +67,31 @@
 
 {% block scripts %}
 <script>
-function showHint(message) {
-    const toast = document.getElementById('hintToast');
-    const hintText = document.getElementById('hintText');
-    
-    hintText.textContent = message;
-    toast.classList.remove('hidden');
-    toast.classList.add('slide-in');
-    
-    setTimeout(() => {
-        toast.classList.remove('slide-in');
-        toast.classList.add('slide-out');
+    function showHint(message) {
+        const toast = document.getElementById('hintToast');
+        const hintText = document.getElementById('hintText');
+
+        hintText.textContent = message;
+        toast.classList.remove('hidden');
+        toast.classList.add('slide-in');
+
         setTimeout(() => {
-            toast.classList.add('hidden');
-            toast.classList.remove('slide-out');
-        }, 300);
-    }, 5000);
-}
+            toast.classList.remove('slide-in');
+            toast.classList.add('slide-out');
+            setTimeout(() => {
+                toast.classList.add('hidden');
+                toast.classList.remove('slide-out');
+            }, 300);
+        }, 5000);
+    }
 
-document.getElementById('languageSelect').addEventListener('change', function() {
-    window.location.href = `/code/${this.value}`;
-});
-
-document.getElementById('runCode').addEventListener('click', async function() {
-    const code = document.getElementById('codeEditor').value;
-    const response = await fetch('/execute_code', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-            code: code,
-            language: '{{ language }}',
-            problem_id: '{{ problem.id }}'
-        })
+    document.getElementById('languageSelect').addEventListener('change', function () {
+        window.location.href = `/code/${this.value}`;
     });
-    
-    const result = await response.json();
-    document.getElementById('output').textContent = result.output;
-});
 
-document.getElementById('getHint').addEventListener('click', async function() {
-    const code = document.getElementById('codeEditor').value;
-    try {
-        const response = await fetch('/get_hint', {
+    document.getElementById('runCode').addEventListener('click', async function () {
+        const code = document.getElementById('codeEditor').value;
+        const response = await fetch('/execute_code', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -122,48 +102,69 @@ document.getElementById('getHint').addEventListener('click', async function() {
                 problem_id: '{{ problem.id }}'
             })
         });
-        
+
         const result = await response.json();
-        if (result.error) {
-            showHint('Error: ' + result.error);
-        } else {
-            showHint(result.hint);
+        document.getElementById('output').textContent = result.output;
+    });
+
+    document.getElementById('getHint').addEventListener('click', async function () {
+        const code = document.getElementById('codeEditor').value;
+        try {
+            const response = await fetch('/get_hint', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    code: code,
+                    language: '{{ language }}',
+                    problem_id: '{{ problem.id }}'
+                })
+            });
+
+            const result = await response.json();
+            if (result.error) {
+                showHint('Error: ' + result.error);
+            } else {
+                showHint(result.hint);
+            }
+        } catch (error) {
+            showHint('Failed to get hint. Please try again.');
         }
-    } catch (error) {
-        showHint('Failed to get hint. Please try again.');
-    }
-});
+    });
 </script>
 
 <style>
-.slide-in {
-    animation: slideIn 0.3s forwards;
-}
+    .slide-in {
+        animation: slideIn 0.3s forwards;
+    }
 
-.slide-out {
-    animation: slideOut 0.3s forwards;
-}
+    .slide-out {
+        animation: slideOut 0.3s forwards;
+    }
 
-@keyframes slideIn {
-    from {
-        transform: translateX(100%);
-        opacity: 0;
-    }
-    to {
-        transform: translateX(0);
-        opacity: 1;
-    }
-}
+    @keyframes slideIn {
+        from {
+            transform: translateX(100%);
+            opacity: 0;
+        }
 
-@keyframes slideOut {
-    from {
-        transform: translateX(0);
-        opacity: 1;
+        to {
+            transform: translateX(0);
+            opacity: 1;
+        }
     }
-    to {
-        transform: translateX(100%);
-        opacity: 0;
+
+    @keyframes slideOut {
+        from {
+            transform: translateX(0);
+            opacity: 1;
+        }
+
+        to {
+            transform: translateX(100%);
+            opacity: 0;
+        }
     }
-}
 </style>
 {% endblock %}

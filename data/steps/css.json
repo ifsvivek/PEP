@@ -1,62 +1,86 @@
 {
     "CSS": {
-      "Introduction": {
-        "Definition": "CSS (Cascading Style Sheets) is a stylesheet language used to describe the presentation of a web page, including colors, layout, and fonts.",
-        "History": "CSS was first introduced by Håkon Wium Lie in 1996 to separate content from design in web development.",
-        "Features": [
-          "Separation of content and style: Keeps HTML structure clean.",
-          "Reusability: Styles can be reused across multiple pages.",
-          "Responsive design: Helps create flexible and adaptive layouts.",
-          "Animations and transitions: Enables interactive and dynamic effects."
-        ],
-        "Example": "body { background-color: lightblue; }"
-      },
-      "HowItWorks": {
-        "WorkingMechanism": "CSS works by selecting HTML elements and applying styles to them using selectors and properties.",
-        "WaysToApply": [
-          "Inline CSS: Applied directly to an HTML element using the style attribute.",
-          "Internal CSS: Written inside a <style> tag within the HTML document.",
-          "External CSS: Stored in a separate .css file and linked using the <link> tag."
-        ],
-        "Example": "p { color: red; font-size: 16px; }"
-      },
-      "Usage": {
-        "WhyUseIt": "CSS enhances the appearance of web pages, ensures consistency, and improves user experience.",
-        "HowItIsUsed": [
-          "Styling text: Changing fonts, colors, and sizes.",
-          "Layout design: Creating grids, flexbox, and responsive designs.",
-          "Animations: Adding transitions, keyframes, and hover effects.",
-          "Themes and Skins: Customizing appearance dynamically."
-        ],
-        "Example": "h1 { text-align: center; color: blue; }"
-      },
-      "Basics": {
-        "Selectors": {
-          "Definition": "Selectors are patterns used to target HTML elements and apply styles.",
-          "Types": ["Element Selector (e.g., p)", "Class Selector (e.g., .className)", "ID Selector (e.g., #idName)", "Attribute Selector (e.g., input[type='text'])"],
-          "Example": "#container { width: 100%; padding: 20px; }"
+        "Introduction": {
+            "Definition": "CSS (Cascading Style Sheets) is a stylesheet language used to describe the presentation of a web page, including colors, layout, and fonts.",
+            "History": "CSS was first introduced by Håkon Wium Lie in 1996 to separate content from design in web development.",
+            "Features": [
+                "Separation of content and style: Keeps HTML structure clean.",
+                "Reusability: Styles can be reused across multiple pages.",
+                "Responsive design: Helps create flexible and adaptive layouts.",
+                "Animations and transitions: Enables interactive and dynamic effects."
+            ],
+            "Example": "body { background-color: lightblue; }"
         },
-        "BoxModel": {
-          "Definition": "The CSS box model consists of margins, borders, padding, and the content area of an element.",
-          "Components": ["Content", "Padding", "Border", "Margin"],
-          "Example": "div { margin: 10px; padding: 5px; border: 2px solid black; }"
+        "HowItWorks": {
+            "WorkingMechanism": "CSS works by selecting HTML elements and applying styles to them using selectors and properties.",
+            "WaysToApply": [
+                "Inline CSS: Applied directly to an HTML element using the style attribute.",
+                "Internal CSS: Written inside a <style> tag within the HTML document.",
+                "External CSS: Stored in a separate .css file and linked using the <link> tag."
+            ],
+            "Example": "p { color: red; font-size: 16px; }"
         },
-        "Positioning": {
-          "Definition": "Positioning controls how elements are placed in the layout.",
-          "Types": ["Static (default)", "Relative", "Absolute", "Fixed", "Sticky"],
-          "Example": ".box { position: absolute; top: 50px; left: 100px; }"
+        "Usage": {
+            "WhyUseIt": "CSS enhances the appearance of web pages, ensures consistency, and improves user experience.",
+            "HowItIsUsed": [
+                "Styling text: Changing fonts, colors, and sizes.",
+                "Layout design: Creating grids, flexbox, and responsive designs.",
+                "Animations: Adding transitions, keyframes, and hover effects.",
+                "Themes and Skins: Customizing appearance dynamically."
+            ],
+            "Example": "h1 { text-align: center; color: blue; }"
         },
-        "Flexbox": {
-          "Definition": "Flexbox is a layout model that allows elements to align and distribute space efficiently in a container.",
-          "Properties": ["display: flex", "justify-content", "align-items", "flex-wrap"],
-          "Example": ".container { display: flex; justify-content: center; }"
-        },
-        "Grid": {
-          "Definition": "CSS Grid is a powerful layout system for designing web pages in a grid-based manner.",
-          "Properties": ["display: grid", "grid-template-columns", "grid-gap"],
-          "Example": ".grid-container { display: grid; grid-template-columns: repeat(3, 1fr); grid-gap: 10px; }"
+        "Basics": {
+            "Selectors": {
+                "Definition": "Selectors are patterns used to target HTML elements and apply styles.",
+                "Types": [
+                    "Element Selector (e.g., p)",
+                    "Class Selector (e.g., .className)",
+                    "ID Selector (e.g., #idName)",
+                    "Attribute Selector (e.g., input[type='text'])"
+                ],
+                "Example": "#container { width: 100%; padding: 20px; }"
+            },
+            "BoxModel": {
+                "Definition": "The CSS box model consists of margins, borders, padding, and the content area of an element.",
+                "Components": [
+                    "Content",
+                    "Padding",
+                    "Border",
+                    "Margin"
+                ],
+                "Example": "div { margin: 10px; padding: 5px; border: 2px solid black; }"
+            },
+            "Positioning": {
+                "Definition": "Positioning controls how elements are placed in the layout.",
+                "Types": [
+                    "Static (default)",
+                    "Relative",
+                    "Absolute",
+                    "Fixed",
+                    "Sticky"
+                ],
+                "Example": ".box { position: absolute; top: 50px; left: 100px; }"
+            },
+            "Flexbox": {
+                "Definition": "Flexbox is a layout model that allows elements to align and distribute space efficiently in a container.",
+                "Properties": [
+                    "display: flex",
+                    "justify-content",
+                    "align-items",
+                    "flex-wrap"
+                ],
+                "Example": ".container { display: flex; justify-content: center; }"
+            },
+            "Grid": {
+                "Definition": "CSS Grid is a powerful layout system for designing web pages in a grid-based manner.",
+                "Properties": [
+                    "display: grid",
+                    "grid-template-columns",
+                    "grid-gap"
+                ],
+                "Example": ".grid-container { display: grid; grid-template-columns: repeat(3, 1fr); grid-gap: 10px; }"
+            }
         }
-      }
     }
-  }
-  
+}

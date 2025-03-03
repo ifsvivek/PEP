@@ -23,77 +23,70 @@
 
     <form id="quizForm" method="post" action="{{ url_for('submit_quiz', topic=topic.replace(' ', '_')) }}">
         {% for i in range(quiz.questions|length) %}
-            {% set question = quiz.questions[i] %}
-            <div class="bg-white rounded-xl shadow-md mb-6 overflow-hidden question-container {% if i > 0 %}hidden{% endif %}" data-question="{{ i+1 }}">
-                <div class="bg-gradient-to-r from-gray-700 to-gray-800 px-6 py-4 text-white flex justify-between items-center">
-                    <h3 class="font-semibold">Question {{ i+1 }}</h3>
-                    <div class="text-sm font-medium text-gray-200 md:hidden">
-                        {{ i+1 }} of {{ quiz.questions|length }}
-                    </div>
-                </div>
-                <div class="p-6">
-                    <p class="text-gray-800 text-lg mb-6">{{ question.question }}</p>
-                    
-                    <div class="space-y-3">
-                        {% for j in range(question.options|length) %}
-                            {% set option = question.options[j] %}
-                            <div class="option-container">
-                                <input class="form-radio sr-only" 
-                                       type="radio" 
-                                       name="q{{ i }}" 
-                                       id="q{{ i }}_option{{ j }}" 
-                                       value="{{ option }}" 
-                                       required>
-                                <label class="block p-4 border-2 border-gray-200 rounded-lg cursor-pointer hover:border-primary-300 hover:bg-primary-50 transition-all option-label flex items-center" 
-                                       for="q{{ i }}_option{{ j }}">
-                                    <span class="option-indicator w-5 h-5 mr-3 rounded-full border-2 border-gray-300 flex-shrink-0"></span>
-                                    <span class="text-gray-700">{{ option }}</span>
-                                </label>
-                            </div>
-                        {% endfor %}
-                    </div>
-                </div>
-                <div class="bg-gray-50 px-6 py-4 border-t border-gray-200 flex justify-between">
-                    <button type="button" 
-                            class="prev-btn text-gray-600 hover:text-primary-600 font-medium flex items-center transition-colors {% if i == 0 %}invisible{% endif %}">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
-                        </svg>
-                        Previous
-                    </button>
-                    
-                    {% if i < quiz.questions|length - 1 %}
-                        <button type="button" 
-                                class="next-btn bg-primary-600 hover:bg-primary-700 text-white font-medium py-2 px-4 rounded-lg transition-colors flex items-center disabled:opacity-50 disabled:cursor-not-allowed">
-                            Next
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 ml-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
-                            </svg>
-                        </button>
-                    {% else %}
-                        <button type="submit" 
-                                class="submit-btn bg-green-600 hover:bg-green-700 text-white font-medium py-2 px-4 rounded-lg transition-colors flex items-center">
-                            Submit Answers
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 ml-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
-                            </svg>
-                        </button>
-                    {% endif %}
+        {% set question = quiz.questions[i] %}
+        <div class="bg-white rounded-xl shadow-md mb-6 overflow-hidden question-container {% if i > 0 %}hidden{% endif %}" data-question="{{ i+1 }}">
+            <div class="bg-gradient-to-r from-gray-700 to-gray-800 px-6 py-4 text-white flex justify-between items-center">
+                <h3 class="font-semibold">Question {{ i+1 }}</h3>
+                <div class="text-sm font-medium text-gray-200 md:hidden">
+                    {{ i+1 }} of {{ quiz.questions|length }}
                 </div>
             </div>
+            <div class="p-6">
+                <p class="text-gray-800 text-lg mb-6">{{ question.question }}</p>
+
+                <div class="space-y-3">
+                    {% for j in range(question.options|length) %}
+                    {% set option = question.options[j] %}
+                    <div class="option-container">
+                        <input class="form-radio sr-only" type="radio" name="q{{ i }}" id="q{{ i }}_option{{ j }}" value="{{ option }}" required>
+                        <label
+                            class="block p-4 border-2 border-gray-200 rounded-lg cursor-pointer hover:border-primary-300 hover:bg-primary-50 transition-all option-label flex items-center"
+                            for="q{{ i }}_option{{ j }}">
+                            <span class="option-indicator w-5 h-5 mr-3 rounded-full border-2 border-gray-300 flex-shrink-0"></span>
+                            <span class="text-gray-700">{{ option }}</span>
+                        </label>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+            <div class="bg-gray-50 px-6 py-4 border-t border-gray-200 flex justify-between">
+                <button type="button" class="prev-btn text-gray-600 hover:text-primary-600 font-medium flex items-center transition-colors {% if i == 0 %}invisible{% endif %}">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+                    </svg>
+                    Previous
+                </button>
+
+                {% if i < quiz.questions|length - 1 %} <button type="button"
+                    class="next-btn bg-primary-600 hover:bg-primary-700 text-white font-medium py-2 px-4 rounded-lg transition-colors flex items-center disabled:opacity-50 disabled:cursor-not-allowed">
+                    Next
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 ml-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                    </svg>
+                    </button>
+                    {% else %}
+                    <button type="submit" class="submit-btn bg-green-600 hover:bg-green-700 text-white font-medium py-2 px-4 rounded-lg transition-colors flex items-center">
+                        Submit Answers
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 ml-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                        </svg>
+                    </button>
+                    {% endif %}
+            </div>
+        </div>
         {% endfor %}
     </form>
-    
+
     <!-- Question navigation and summary -->
     <div class="bg-white rounded-xl shadow-md p-6 mb-8">
         <h3 class="font-semibold text-gray-800 mb-4">Question Navigator</h3>
         <div class="flex flex-wrap gap-2" id="question-navigator">
             {% for i in range(quiz.questions|length) %}
-                <button type="button" 
-                        class="question-nav-btn w-8 h-8 rounded-full flex items-center justify-center border text-sm font-medium {% if i == 0 %}bg-primary-600 text-white border-primary-600{% else %}border-gray-300 text-gray-700 hover:border-primary-400{% endif %}"
-                        data-question="{{ i+1 }}">
-                    {{ i+1 }}
-                </button>
+            <button type="button"
+                class="question-nav-btn w-8 h-8 rounded-full flex items-center justify-center border text-sm font-medium {% if i == 0 %}bg-primary-600 text-white border-primary-600{% else %}border-gray-300 text-gray-700 hover:border-primary-400{% endif %}"
+                data-question="{{ i+1 }}">
+                {{ i+1 }}
+            </button>
             {% endfor %}
         </div>
         <div class="mt-4 flex items-center text-sm text-gray-600">
@@ -111,7 +104,7 @@
             </div>
         </div>
     </div>
-    
+
     <!-- Instructions card -->
     <div class="bg-blue-50 border border-blue-200 rounded-lg p-4 text-blue-800 text-sm">
         <div class="flex items-start">
@@ -132,12 +125,12 @@
 </div>
 
 <style>
-    .option-container input[type="radio"]:checked + .option-label {
+    .option-container input[type="radio"]:checked+.option-label {
         border-color: #4f46e5;
         background-color: #eef2ff;
     }
-    
-    .option-container input[type="radio"]:checked + .option-label .option-indicator {
+
+    .option-container input[type="radio"]:checked+.option-label .option-indicator {
         border-color: #4f46e5;
         background-color: #4f46e5;
         box-shadow: inset 0 0 0 3px white;
@@ -145,153 +138,153 @@
 </style>
 
 <script>
-document.addEventListener('DOMContentLoaded', function() {
-    // Better uniqueness by using the topic name + timestamp in the storage key
-    const STORAGE_KEY = 'quiz_{{ topic.replace(" ", "_") }}_{{ quiz.questions|length }}';
-    const form = document.getElementById('quizForm');
-    const totalQuestions = Number('{{ quiz.questions|length }}');
-    const progressBar = document.getElementById('progress-bar');
-    const currentQuestionDisplay = document.getElementById('current-question');
-    const questionContainers = document.querySelectorAll('.question-container');
-    const questionNavBtns = document.querySelectorAll('.question-nav-btn');
-    let currentQuestion = 1;
-    
-    // Update progress bar and display
-    function updateProgress() {
-        const progress = (getAnsweredCount() / totalQuestions) * 100;
-        progressBar.style.width = `${progress}%`;
-        updateQuestionNavigator();
-    }
-    
-    // Get number of answered questions
-    function getAnsweredCount() {
-        let count = 0;
-        for (let i = 0; i < totalQuestions; i++) {
-            if (document.querySelector(`input[name="q${i}"]:checked`)) {
-                count++;
-            }
+    document.addEventListener('DOMContentLoaded', function () {
+        // Better uniqueness by using the topic name + timestamp in the storage key
+        const STORAGE_KEY = 'quiz_{{ topic.replace(" ", "_") }}_{{ quiz.questions|length }}';
+        const form = document.getElementById('quizForm');
+        const totalQuestions = Number('{{ quiz.questions|length }}');
+        const progressBar = document.getElementById('progress-bar');
+        const currentQuestionDisplay = document.getElementById('current-question');
+        const questionContainers = document.querySelectorAll('.question-container');
+        const questionNavBtns = document.querySelectorAll('.question-nav-btn');
+        let currentQuestion = 1;
+
+        // Update progress bar and display
+        function updateProgress() {
+            const progress = (getAnsweredCount() / totalQuestions) * 100;
+            progressBar.style.width = `${progress}%`;
+            updateQuestionNavigator();
         }
-        return count;
-    }
-    
-    // Update question navigator
-    function updateQuestionNavigator() {
-        questionNavBtns.forEach((btn, index) => {
-            // Reset all buttons
-            btn.classList.remove('bg-primary-600', 'text-white', 'border-primary-600', 'bg-green-600', 'border-green-600');
-            
-            // Check if question is answered
-            const isAnswered = document.querySelector(`input[name="q${index}"]:checked`);
-            
-            // Current question
-            if (index + 1 === currentQuestion) {
-                btn.classList.add('bg-primary-600', 'text-white', 'border-primary-600');
-            } 
-            // Answered question
-            else if (isAnswered) {
-                btn.classList.add('bg-green-600', 'text-white', 'border-green-600');
+
+        // Get number of answered questions
+        function getAnsweredCount() {
+            let count = 0;
+            for (let i = 0; i < totalQuestions; i++) {
+                if (document.querySelector(`input[name="q${i}"]:checked`)) {
+                    count++;
+                }
             }
-        });
-    }
-    
-    // Show a specific question
-    function showQuestion(questionNumber) {
-        questionContainers.forEach(container => {
-            const containerQuestion = parseInt(container.dataset.question);
-            container.classList.add('hidden');
-            
-            if (containerQuestion === questionNumber) {
-                container.classList.remove('hidden');
-            }
-        });
-        
-        currentQuestion = questionNumber;
-        currentQuestionDisplay.textContent = questionNumber;
-        updateQuestionNavigator();
-    }
-    
-    // Function to save the current state of all answers
-    function saveAnswers() {
-        const answers = {};
-        for (let i = 0; i < totalQuestions; i++) {
-            const selectedOption = document.querySelector(`input[name="q${i}"]:checked`);
-            if (selectedOption) {
-                answers[`q${i}`] = selectedOption.value;
-            }
+            return count;
         }
-        localStorage.setItem(STORAGE_KEY, JSON.stringify(answers));
-        updateProgress();
-    }
-    
-    // Function to load saved answers
-    function loadAnswers() {
-        try {
-            const savedData = localStorage.getItem(STORAGE_KEY);
-            if (!savedData) return;
-            
-            const answers = JSON.parse(savedData);
-            Object.entries(answers).forEach(([name, value]) => {
-                const options = document.querySelectorAll(`input[name="${name}"]`);
-                options.forEach(option => {
-                    if (option.value === value) {
-                        option.checked = true;
-                    }
-                });
+
+        // Update question navigator
+        function updateQuestionNavigator() {
+            questionNavBtns.forEach((btn, index) => {
+                // Reset all buttons
+                btn.classList.remove('bg-primary-600', 'text-white', 'border-primary-600', 'bg-green-600', 'border-green-600');
+
+                // Check if question is answered
+                const isAnswered = document.querySelector(`input[name="q${index}"]:checked`);
+
+                // Current question
+                if (index + 1 === currentQuestion) {
+                    btn.classList.add('bg-primary-600', 'text-white', 'border-primary-600');
+                }
+                // Answered question
+                else if (isAnswered) {
+                    btn.classList.add('bg-green-600', 'text-white', 'border-green-600');
+                }
             });
+        }
+
+        // Show a specific question
+        function showQuestion(questionNumber) {
+            questionContainers.forEach(container => {
+                const containerQuestion = parseInt(container.dataset.question);
+                container.classList.add('hidden');
+
+                if (containerQuestion === questionNumber) {
+                    container.classList.remove('hidden');
+                }
+            });
+
+            currentQuestion = questionNumber;
+            currentQuestionDisplay.textContent = questionNumber;
+            updateQuestionNavigator();
+        }
+
+        // Function to save the current state of all answers
+        function saveAnswers() {
+            const answers = {};
+            for (let i = 0; i < totalQuestions; i++) {
+                const selectedOption = document.querySelector(`input[name="q${i}"]:checked`);
+                if (selectedOption) {
+                    answers[`q${i}`] = selectedOption.value;
+                }
+            }
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(answers));
             updateProgress();
-        } catch (err) {
-            console.error("Error loading saved answers:", err);
-            localStorage.removeItem(STORAGE_KEY);
         }
-    }
-    
-    // Add event listeners
-    
-    // Radio button change
-    const allRadios = document.querySelectorAll('input[type="radio"]');
-    allRadios.forEach(radio => {
-        radio.addEventListener('change', saveAnswers);
-    });
-    
-    // Next/Previous button clicks
-    const nextBtns = document.querySelectorAll('.next-btn');
-    nextBtns.forEach(btn => {
-        btn.addEventListener('click', () => {
-            showQuestion(currentQuestion + 1);
-        });
-    });
-    
-    const prevBtns = document.querySelectorAll('.prev-btn');
-    prevBtns.forEach(btn => {
-        btn.addEventListener('click', () => {
-            showQuestion(currentQuestion - 1);
-        });
-    });
-    
-    // Question navigator clicks
-    questionNavBtns.forEach(btn => {
-        btn.addEventListener('click', () => {
-            const questionNum = parseInt(btn.dataset.question);
-            showQuestion(questionNum);
-        });
-    });
-    
-    // Validate form submission
-    form.addEventListener('submit', function(event) {
-        let answeredCount = getAnsweredCount();
-        
-        if (answeredCount < totalQuestions) {
-            event.preventDefault();
-            alert(`Please answer all questions. You've answered ${answeredCount} out of ${totalQuestions}.`);
-        } else {
-            // Clear only this quiz's data from localStorage on successful submission
-            localStorage.removeItem(STORAGE_KEY);
+
+        // Function to load saved answers
+        function loadAnswers() {
+            try {
+                const savedData = localStorage.getItem(STORAGE_KEY);
+                if (!savedData) return;
+
+                const answers = JSON.parse(savedData);
+                Object.entries(answers).forEach(([name, value]) => {
+                    const options = document.querySelectorAll(`input[name="${name}"]`);
+                    options.forEach(option => {
+                        if (option.value === value) {
+                            option.checked = true;
+                        }
+                    });
+                });
+                updateProgress();
+            } catch (err) {
+                console.error("Error loading saved answers:", err);
+                localStorage.removeItem(STORAGE_KEY);
+            }
         }
+
+        // Add event listeners
+
+        // Radio button change
+        const allRadios = document.querySelectorAll('input[type="radio"]');
+        allRadios.forEach(radio => {
+            radio.addEventListener('change', saveAnswers);
+        });
+
+        // Next/Previous button clicks
+        const nextBtns = document.querySelectorAll('.next-btn');
+        nextBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                showQuestion(currentQuestion + 1);
+            });
+        });
+
+        const prevBtns = document.querySelectorAll('.prev-btn');
+        prevBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                showQuestion(currentQuestion - 1);
+            });
+        });
+
+        // Question navigator clicks
+        questionNavBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                const questionNum = parseInt(btn.dataset.question);
+                showQuestion(questionNum);
+            });
+        });
+
+        // Validate form submission
+        form.addEventListener('submit', function (event) {
+            let answeredCount = getAnsweredCount();
+
+            if (answeredCount < totalQuestions) {
+                event.preventDefault();
+                alert(`Please answer all questions. You've answered ${answeredCount} out of ${totalQuestions}.`);
+            } else {
+                // Clear only this quiz's data from localStorage on successful submission
+                localStorage.removeItem(STORAGE_KEY);
+            }
+        });
+
+        // Initialize
+        loadAnswers();
+        updateProgress();
     });
-    
-    // Initialize
-    loadAnswers();
-    updateProgress();
-});
 </script>
 {% endblock %}

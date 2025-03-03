@@ -1,171 +1,145 @@
 <!DOCTYPE html>
 <html lang="en">
-    <head>
-        <meta charset="UTF-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <title>{% block title %}PEP - Personalized Education Platform{% endblock %}</title>
-        <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}" />
-        <script src="https://cdn.tailwindcss.com"></script>
-        <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
-        <script>
-            tailwind.config = {
-                theme: {
-                    extend: {
-                        fontFamily: {
-                            sans: ["Inter", "sans-serif"],
-                        },
-                        colors: {
-                            primary: {
-                                50: "#eef2ff",
-                                100: "#e0e7ff",
-                                200: "#c7d2fe",
-                                300: "#a5b4fc",
-                                400: "#818cf8",
-                                500: "#6366f1",
-                                600: "#4f46e5",
-                                700: "#4338ca",
-                                800: "#3730a3",
-                                900: "#312e81",
-                            },
-                        },
-                        transitionProperty: {
-                            height: "height",
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{% block title %}PEP - Personalized Education Platform{% endblock %}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}" />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ["Inter", "sans-serif"],
+                    },
+                    colors: {
+                        primary: {
+                            50: "#eef2ff",
+                            100: "#e0e7ff",
+                            200: "#c7d2fe",
+                            300: "#a5b4fc",
+                            400: "#818cf8",
+                            500: "#6366f1",
+                            600: "#4f46e5",
+                            700: "#4338ca",
+                            800: "#3730a3",
+                            900: "#312e81",
                         },
                     },
+                    transitionProperty: {
+                        height: "height",
+                    },
                 },
-            };
-        </script>
-        <style>
-            body {
-                font-family: "Inter", sans-serif;
+            },
+        };
+    </script>
+    <style>
+        body {
+            font-family: "Inter", sans-serif;
+        }
+
+        .nav-link {
+            position: relative;
+        }
+
+        .nav-link::after {
+            content: "";
+            position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: -4px;
+            left: 0;
+            background-color: white;
+            transition: width 0.3s;
+        }
+
+        .nav-link:hover::after {
+            width: 100%;
+        }
+
+        .flash-message {
+            animation: slideIn 0.5s forwards;
+        }
+
+        @keyframes slideIn {
+            0% {
+                transform: translateY(-20px);
+                opacity: 0;
             }
-            .nav-link {
-                position: relative;
+
+            100% {
+                transform: translateY(0);
+                opacity: 1;
             }
-            .nav-link::after {
-                content: "";
-                position: absolute;
-                width: 0;
-                height: 2px;
-                bottom: -4px;
-                left: 0;
-                background-color: white;
-                transition: width 0.3s;
-            }
-            .nav-link:hover::after {
-                width: 100%;
-            }
-            .flash-message {
-                animation: slideIn 0.5s forwards;
-            }
-            @keyframes slideIn {
-                0% {
-                    transform: translateY(-20px);
-                    opacity: 0;
-                }
-                100% {
-                    transform: translateY(0);
-                    opacity: 1;
-                }
-            }
-        </style>
-    </head>
-    <body class="bg-gray-50 flex flex-col min-h-screen font-sans">
-        <nav class="bg-primary-600">
-            <div class="container mx-auto px-4">
-                <div class="flex justify-between items-center py-4">
-                    <a class="font-bold text-2xl tracking-tight flex items-center" href="{{ url_for('index') }}">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path
-                                stroke-linecap="round"
-                                stroke-linejoin="round"
-                                stroke-width="2"
-                                d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"
-                            />
-                        </svg>
-                        PEP
-                    </a>
-                    <button id="menu-button" class="md:hidden focus:outline-none transition-transform duration-200">
-                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path>
-                        </svg>
-                    </button>
-                    <div class="hidden md:flex flex-grow justify-between items-center ml-10" id="navbar-content">
-                        <ul class="flex space-x-8">
-                            <li>
-                                <a class="nav-link font-medium hover:text-white transition-colors duration-200" href="{{ url_for('index') }}">Home</a>
-                            </li>
-                            {% if session.username %}
-                            <li>
-                                <a class="nav-link font-medium hover:text-white transition-colors duration-200" href="{{ url_for('dashboard') }}">Dashboard</a>
-                            </li>
-                            <li>
-                                <a class="nav-link font-medium hover:text-white transition-colors duration-200" href="{{ url_for('topics') }}">Topics</a>
-                            </li>
-                            <li>
-                                <a class="nav-link font-medium hover:text-white transition-colors duration-200" href="{{ url_for('coding') }}">Live Coding</a>
-                            </li>
-                            {% endif %}
-                        </ul>
-                        <ul class="flex space-x-8 items-center">
-                            {% if session.username %}
-                            <li>
-                                <span class="flex items-center">
-                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" viewBox="0 0 20 20" fill="currentColor">
-                                        <path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clip-rule="evenodd" />
-                                    </svg>
-                                    {{ session.username }}
-                                </span>
-                            </li>
-                            <li>
-                                <a
-                                    class="bg-white bg-opacity-20 hover:bg-opacity-30 px-4 py-2 rounded-md transition-all duration-200 font-medium"
-                                    href="{{ url_for('logout') }}"
-                                >
-                                    Logout
-                                </a>
-                            </li>
-                            {% else %}
-                            <li>
-                                <a class="nav-link font-medium hover:text-white transition-colors duration-200" href="{{ url_for('login') }}">Login</a>
-                            </li>
-                            <li>
-                                <a
-                                    class="bg-white text-primary-700 hover:bg-gray-100 px-4 py-2 rounded-md transition-all duration-200 font-medium"
-                                    href="{{ url_for('register') }}"
-                                >
-                                    Register
-                                </a>
-                            </li>
-                            {% endif %}
-                        </ul>
-                    </div>
-                    <div class="flex space-x-4">
-                        <a href="{{ url_for('dashboard') }}" class="text-white hover:text-gray-200">Dashboard</a>
-                        <a href="{{ url_for('topics') }}" class="text-white hover:text-gray-200">Topics</a>
-                        <div class="relative group">
-                            <button class="text-white hover:text-gray-200">Learning</button>
-                            <div class="absolute hidden group-hover:block w-48 bg-white shadow-lg rounded-lg mt-2">
-                                <a href="{{ url_for('topics') }}" class="block px-4 py-2 hover:bg-gray-100">Traditional Learning</a>
-                                <a href="{{ url_for('step_topics') }}" class="block px-4 py-2 hover:bg-gray-100">Step-by-Step Learning</a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <!-- Mobile menu -->
-                <div class="hidden md:hidden mt-3 pb-2 overflow-hidden transition-all duration-300 max-h-0" id="mobile-menu">
-                    <ul class="space-y-3 pt-3">
+        }
+
+        /* Add styles for dropdown menu */
+        .dropdown-menu {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            display: none;
+            background-color: white;
+            border-radius: 0.375rem;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            z-index: 50;
+            min-width: 12rem;
+        }
+
+        .dropdown:hover .dropdown-menu {
+            display: block;
+        }
+    </style>
+</head>
+
+<body class="bg-gray-50 flex flex-col min-h-screen font-sans">
+    <nav class="bg-primary-600">
+        <div class="container mx-auto px-4">
+            <div class="flex justify-between items-center py-4">
+                <a class="font-bold text-2xl tracking-tight flex items-center" href="{{ url_for('index') }}">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+                    </svg>
+                    PEP
+                </a>
+                <button id="menu-button" class="md:hidden focus:outline-none transition-transform duration-200">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path>
+                    </svg>
+                </button>
+                <div class="hidden md:flex flex-grow justify-between items-center ml-10" id="navbar-content">
+                    <ul class="flex space-x-8">
                         <li>
-                            <a class="block hover:text-primary-200 transition-colors duration-200" href="{{ url_for('index') }}">Home</a>
+                            <a class="nav-link font-medium hover:text-white transition-colors duration-200" href="{{ url_for('index') }}">Home</a>
                         </li>
                         {% if session.username %}
                         <li>
-                            <a class="block hover:text-primary-200 transition-colors duration-200" href="{{ url_for('dashboard') }}">Dashboard</a>
+                            <a class="nav-link font-medium hover:text-white transition-colors duration-200" href="{{ url_for('dashboard') }}">Dashboard</a>
+                        </li>
+                        <li class="dropdown relative">
+                            <a class="nav-link font-medium hover:text-white transition-colors duration-200 flex items-center" href="#">
+                                Learning
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 ml-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                                </svg>
+                            </a>
+                            <div class="dropdown-menu mt-1">
+                                <a href="{{ url_for('topics') }}" class="block px-4 py-2 text-gray-800 hover:bg-gray-100">Traditional Learning</a>
+                                <a href="{{ url_for('step_topics') }}" class="block px-4 py-2 text-gray-800 hover:bg-gray-100">Step-by-Step Learning</a>
+                            </div>
                         </li>
                         <li>
-                            <a class="block hover:text-primary-200 transition-colors duration-200" href="{{ url_for('topics') }}">Topics</a>
+                            <a class="nav-link font-medium hover:text-white transition-colors duration-200" href="{{ url_for('coding') }}">Live Coding</a>
                         </li>
-                        <li class="pt-2 border-t border-primary-600">
+                        {% endif %}
+                    </ul>
+                    <ul class="flex space-x-8 items-center">
+                        {% if session.username %}
+                        <li>
                             <span class="flex items-center">
                                 <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" viewBox="0 0 20 20" fill="currentColor">
                                     <path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clip-rule="evenodd" />
@@ -174,77 +148,138 @@
                             </span>
                         </li>
                         <li>
-                            <a class="block bg-white bg-opacity-20 hover:bg-opacity-30 px-3 py-2 rounded-md" href="{{ url_for('logout') }}">Logout</a>
+                            <a class="bg-white bg-opacity-20 hover:bg-opacity-30 px-4 py-2 rounded-md transition-all duration-200 font-medium" href="{{ url_for('logout') }}">
+                                Logout
+                            </a>
                         </li>
                         {% else %}
                         <li>
-                            <a class="block hover:text-primary-200 transition-colors duration-200" href="{{ url_for('login') }}">Login</a>
+                            <a class="nav-link font-medium hover:text-white transition-colors duration-200" href="{{ url_for('login') }}">Login</a>
                         </li>
                         <li>
-                            <a class="block bg-white text-primary-700 hover:bg-gray-100 px-3 py-2 rounded-md" href="{{ url_for('register') }}">Register</a>
+                            <a class="bg-white text-primary-700 hover:bg-gray-100 px-4 py-2 rounded-md transition-all duration-200 font-medium" href="{{ url_for('register') }}">
+                                Register
+                            </a>
                         </li>
                         {% endif %}
                     </ul>
                 </div>
             </div>
-        </nav>
-
-        <div class="container mx-auto px-4 py-8 flex-grow">
-            {% with messages = get_flashed_messages() %} {% if messages %} {% for message in messages %}
-            <div class="bg-primary-100 border-l-4 border-primary-500 text-primary-700 p-4 mb-6 relative rounded-r-md shadow-sm flash-message" role="alert">
-                {{ message }}
-                <button
-                    type="button"
-                    class="absolute top-0 right-0 mt-4 mr-4 text-primary-700 hover:text-primary-900 transition-colors duration-200"
-                    onclick="this.parentElement.remove()"
-                >
-                    <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
-                    </svg>
-                </button>
-            </div>
-            {% endfor %} {% endif %} {% endwith %} {% block content %}{% endblock %}
-        </div>
-
-        <footer class="bg-white py-8 border-t border-gray-200 mt-auto">
-            <div class="container mx-auto px-4">
-                <div class="flex flex-col md:flex-row justify-between items-center">
-                    <div class="mb-4 md:mb-0">
-                        <a class="font-bold text-xl text-primary-700 flex items-center" href="{{ url_for('index') }}">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path
-                                    stroke-linecap="round"
-                                    stroke-linejoin="round"
-                                    stroke-width="2"
-                                    d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"
-                                />
+            <!-- Mobile menu -->
+            <div class="hidden md:hidden mt-3 pb-2 overflow-hidden transition-all duration-300 max-h-0" id="mobile-menu">
+                <ul class="space-y-3 pt-3">
+                    <li>
+                        <a class="block hover:text-primary-200 transition-colors duration-200" href="{{ url_for('index') }}">Home</a>
+                    </li>
+                    {% if session.username %}
+                    <li>
+                        <a class="block hover:text-primary-200 transition-colors duration-200" href="{{ url_for('dashboard') }}">Dashboard</a>
+                    </li>
+                    <li>
+                        <button id="mobile-dropdown-button" class="flex justify-between w-full hover:text-primary-200 transition-colors duration-200">
+                            Learning
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
                             </svg>
-                            PEP
-                        </a>
-                    </div>
-                    <div class="text-gray-600 text-sm">Personalized Education Platform &copy; 2025 | All rights reserved</div>
-                </div>
+                        </button>
+                        <div id="mobile-dropdown-menu" class="hidden pl-4 mt-2 space-y-2">
+                            <a class="block hover:text-primary-200 transition-colors duration-200" href="{{ url_for('topics') }}">Traditional Learning</a>
+                            <a class="block hover:text-primary-200 transition-colors duration-200" href="{{ url_for('step_topics') }}">Step-by-Step Learning</a>
+                        </div>
+                    </li>
+                    <li>
+                        <a class="block hover:text-primary-200 transition-colors duration-200" href="{{ url_for('coding') }}">Live Coding</a>
+                    </li>
+                    <li class="pt-2 border-t border-primary-600">
+                        <span class="flex items-center">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" viewBox="0 0 20 20" fill="currentColor">
+                                <path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clip-rule="evenodd" />
+                            </svg>
+                            {{ session.username }}
+                        </span>
+                    </li>
+                    <li>
+                        <a class="block bg-white bg-opacity-20 hover:bg-opacity-30 px-3 py-2 rounded-md" href="{{ url_for('logout') }}">Logout</a>
+                    </li>
+                    {% else %}
+                    <li>
+                        <a class="block hover:text-primary-200 transition-colors duration-200" href="{{ url_for('login') }}">Login</a>
+                    </li>
+                    <li>
+                        <a class="block bg-white text-primary-700 hover:bg-gray-100 px-3 py-2 rounded-md" href="{{ url_for('register') }}">Register</a>
+                    </li>
+                    {% endif %}
+                </ul>
             </div>
-        </footer>
+        </div>
+    </nav>
 
-        <script>
-            // Mobile menu toggle with animation
-            const menuButton = document.getElementById("menu-button");
-            const mobileMenu = document.getElementById("mobile-menu");
+    <div class="container mx-auto px-4 py-8 flex-grow">
+        {% with messages = get_flashed_messages() %} {% if messages %} {% for message in messages %}
+        <div class="bg-primary-100 border-l-4 border-primary-500 text-primary-700 p-4 mb-6 relative rounded-r-md shadow-sm flash-message" role="alert">
+            {{ message }}
+            <button type="button" class="absolute top-0 right-0 mt-4 mr-4 text-primary-700 hover:text-primary-900 transition-colors duration-200"
+                onclick="this.parentElement.remove()">
+                <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                </svg>
+            </button>
+        </div>
+        {% endfor %} {% endif %} {% endwith %} {% block content %}{% endblock %}
+    </div>
 
-            if (menuButton && mobileMenu) {
-                menuButton.addEventListener("click", () => {
-                    mobileMenu.classList.toggle("hidden");
-                    if (!mobileMenu.classList.contains("hidden")) {
+    <footer class="bg-white py-8 border-t border-gray-200 mt-auto">
+        <div class="container mx-auto px-4">
+            <div class="flex flex-col md:flex-row justify-between items-center">
+                <div class="mb-4 md:mb-0">
+                    <a class="font-bold text-xl text-primary-700 flex items-center" href="{{ url_for('index') }}">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+                        </svg>
+                        PEP
+                    </a>
+                </div>
+                <div class="text-gray-600 text-sm">Personalized Education Platform &copy; 2025 | All rights reserved</div>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Mobile menu toggle with animation
+        const menuButton = document.getElementById("menu-button");
+        const mobileMenu = document.getElementById("mobile-menu");
+
+        if (menuButton && mobileMenu) {
+            menuButton.addEventListener("click", () => {
+                mobileMenu.classList.toggle("hidden");
+                if (!mobileMenu.classList.contains("hidden")) {
+                    mobileMenu.style.maxHeight = mobileMenu.scrollHeight + "px";
+                    menuButton.classList.add("rotate-90");
+                } else {
+                    mobileMenu.style.maxHeight = "0";
+                    menuButton.classList.remove("rotate-90");
+                }
+            });
+        }
+
+        // Mobile dropdown menu toggle
+        const mobileDropdownButton = document.getElementById("mobile-dropdown-button");
+        const mobileDropdownMenu = document.getElementById("mobile-dropdown-menu");
+
+        if (mobileDropdownButton && mobileDropdownMenu) {
+            mobileDropdownButton.addEventListener("click", () => {
+                mobileDropdownMenu.classList.toggle("hidden");
+                // Update parent menu height when dropdown changes
+                if (mobileMenu) {
+                    setTimeout(() => {
                         mobileMenu.style.maxHeight = mobileMenu.scrollHeight + "px";
-                        menuButton.classList.add("rotate-90");
-                    } else {
-                        mobileMenu.style.maxHeight = "0";
-                        menuButton.classList.remove("rotate-90");
-                    }
-                });
-            }
-        </script>
-        {% block scripts %}{% endblock %}
-    </body>
+                    }, 10);
+                }
+            });
+        }
+    </script>
+    {% block scripts %}{% endblock %}
+</body>
+
 </html>

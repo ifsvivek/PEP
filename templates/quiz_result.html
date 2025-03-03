@@ -6,9 +6,9 @@
 <div class="mb-10">
     <h1 class="text-3xl font-bold mb-4 text-gray-800 text-center">Quiz Results</h1>
     <p class="text-xl text-gray-600 mb-8 text-center">{{ topic }}</p>
-    
+
     {% set percentage = (score / total) * 100 %}
-    
+
     <div class="bg-white rounded-xl shadow-lg p-8 max-w-2xl mx-auto">
         <!-- Score Display -->
         <div class="text-center mb-8">
@@ -16,19 +16,13 @@
                 <svg class="w-40 h-40" viewBox="0 0 36 36" xmlns="http://www.w3.org/2000/svg">
                     <!-- Background Circle -->
                     <circle cx="18" cy="18" r="16" fill="none" stroke="#e6e6e6" stroke-width="2"></circle>
-                    
+
                     <!-- Score Circle with gradient -->
-                    <path 
-                        d="M18 2.0845
+                    <path d="M18 2.0845
                         a 15.9155 15.9155 0 0 1 0 31.831
-                        a 15.9155 15.9155 0 0 1 0 -31.831"
-                        fill="none"
-                        stroke="url(#scoreGradient)"
-                        stroke-width="2"
-                        stroke-dasharray="{{ percentage }}, 100"
-                        class="animate-scoreDisplay"
-                    ></path>
-                    
+                        a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="url(#scoreGradient)" stroke-width="2" stroke-dasharray="{{ percentage }}, 100"
+                        class="animate-scoreDisplay"></path>
+
                     <!-- Gradient definition -->
                     <defs>
                         <linearGradient id="scoreGradient" x1="0%" y1="0%" x2="100%" y2="0%">
@@ -45,7 +39,7 @@
                         </linearGradient>
                     </defs>
                 </svg>
-                
+
                 <!-- Score Text in Center -->
                 <div class="absolute inset-0 flex items-center justify-center flex-col">
                     <span class="text-4xl font-bold">{{ score }}/{{ total }}</span>
@@ -53,33 +47,34 @@
                 </div>
             </div>
         </div>
-        
+
         <!-- Performance Text -->
         <div class="text-center mb-8">
             {% if percentage >= 70 %}
-                <div class="inline-flex items-center bg-green-100 text-green-800 text-lg font-semibold px-4 py-2 rounded-full">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-                    </svg>
-                    Excellent! You've mastered this topic.
-                </div>
+            <div class="inline-flex items-center bg-green-100 text-green-800 text-lg font-semibold px-4 py-2 rounded-full">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+                Excellent! You've mastered this topic.
+            </div>
             {% elif percentage >= 40 %}
-                <div class="inline-flex items-center bg-yellow-100 text-yellow-800 text-lg font-semibold px-4 py-2 rounded-full">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
-                    </svg>
-                    Good effort! Review some areas to improve.
-                </div>
+            <div class="inline-flex items-center bg-yellow-100 text-yellow-800 text-lg font-semibold px-4 py-2 rounded-full">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                </svg>
+                Good effort! Review some areas to improve.
+            </div>
             {% else %}
-                <div class="inline-flex items-center bg-red-100 text-red-800 text-lg font-semibold px-4 py-2 rounded-full">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                    </svg>
-                    Keep studying! You'll improve with practice.
-                </div>
+            <div class="inline-flex items-center bg-red-100 text-red-800 text-lg font-semibold px-4 py-2 rounded-full">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+                Keep studying! You'll improve with practice.
+            </div>
             {% endif %}
         </div>
-        
+
         <!-- Insight Cards -->
         <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
             <div class="bg-gray-50 p-4 rounded-lg text-center">
@@ -95,29 +90,30 @@
                 <p class="text-2xl font-bold text-red-600">{{ total - score }}</p>
             </div>
         </div>
-        
+
         <!-- Action Buttons -->
         <div class="flex flex-col sm:flex-row justify-center gap-3">
-            <a href="{{ url_for('learn', topic=topic.replace(' ', '_')) }}" 
-               class="flex-1 py-3 px-6 bg-primary-600 hover:bg-primary-700 text-white text-center font-semibold rounded-lg shadow-md transition-all duration-300 flex items-center justify-center">
+            <a href="{{ url_for('learn', topic=topic.replace(' ', '_')) }}"
+                class="flex-1 py-3 px-6 bg-primary-600 hover:bg-primary-700 text-white text-center font-semibold rounded-lg shadow-md transition-all duration-300 flex items-center justify-center">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
                 </svg>
                 Review Content
             </a>
-            <a href="{{ url_for('quiz', topic=topic.replace(' ', '_')) }}" 
-               class="flex-1 py-3 px-6 border border-primary-600 text-primary-600 hover:bg-primary-50 text-center font-semibold rounded-lg transition-all duration-300 flex items-center justify-center">
+            <a href="{{ url_for('quiz', topic=topic.replace(' ', '_')) }}"
+                class="flex-1 py-3 px-6 border border-primary-600 text-primary-600 hover:bg-primary-50 text-center font-semibold rounded-lg transition-all duration-300 flex items-center justify-center">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
                 </svg>
                 Retry Quiz
             </a>
         </div>
     </div>
-    
+
     <div class="text-center mt-8">
-        <a href="{{ url_for('dashboard') }}" 
-           class="inline-flex items-center text-gray-600 hover:text-primary-600 font-medium transition-colors">
+        <a href="{{ url_for('dashboard') }}" class="inline-flex items-center text-gray-600 hover:text-primary-600 font-medium transition-colors">
             <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
             </svg>
@@ -128,9 +124,22 @@
 
 <style>
     @keyframes scoreDisplay {
-        0% { stroke-dasharray: 0, 100; }
-        100% { stroke-dasharray: {{ percentage }}, 100; }
+        0% {
+            stroke-dasharray: 0, 100;
+        }
+
+        100% {
+            stroke-dasharray: {
+                    {
+                    percentage
+                }
+            }
+
+            ,
+            100;
+        }
     }
+
     .animate-scoreDisplay {
         animation: scoreDisplay 1.5s ease-out forwards;
     }

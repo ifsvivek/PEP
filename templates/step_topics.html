@@ -5,14 +5,13 @@
 {% block content %}
 <div class="container mx-auto px-4 py-8">
     <h1 class="text-3xl font-bold text-gray-800 mb-8">Step-by-Step Learning Topics</h1>
-    
+
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {% for topic in topics %}
         <div class="bg-white rounded-xl shadow-md p-6">
             <h2 class="text-2xl font-semibold text-gray-800 mb-4">{{ topic.name }}</h2>
             <p class="text-gray-600 mb-6">{{ topic.description }}</p>
-            <a href="{{ url_for('steps', topic=topic.name|replace(' ', '_'), step=0) }}" 
-               class="inline-block bg-primary-600 hover:bg-primary-700 text-white px-6 py-3 rounded-lg">
+            <a href="{{ url_for('steps', topic=topic.name|replace(' ', '_'), step=0) }}" class="inline-block bg-primary-600 hover:bg-primary-700 text-white px-6 py-3 rounded-lg">
                 Start Learning
             </a>
         </div>

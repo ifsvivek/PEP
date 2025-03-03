@@ -17,18 +17,18 @@
     <!-- Content -->
     <div class="bg-white rounded-xl shadow-md p-8">
         <h2 class="text-2xl font-semibold text-gray-800 mb-6">{{ section_name }}</h2>
-        
+
         {% for item in content %}
         <div class="mb-6">
             <h3 class="text-xl font-semibold text-gray-700 mb-2">{{ item.title }}</h3>
-            
+
             {% if item.type == 'list' %}
             <ul class="list-disc list-inside text-gray-600">
                 {% for entry in item.content %}
                 <li>{{ entry }}</li>
                 {% endfor %}
             </ul>
-            
+
             {% elif item.type == 'dict' %}
             <div class="space-y-4">
                 {% for dict_item in item.dict_items %}
@@ -46,10 +46,10 @@
                 </div>
                 {% endfor %}
             </div>
-            
+
             {% elif item.type == 'code' %}
             <pre class="bg-gray-100 p-4 rounded-lg"><code>{{ item.content }}</code></pre>
-            
+
             {% else %}
             <p class="text-gray-600">{{ item.content }}</p>
             {% endif %}
@@ -60,19 +60,16 @@
     <!-- Navigation -->
     <div class="flex justify-between mt-8">
         {% if current_step > 0 %}
-        <a href="{{ url_for('steps', topic=topic|replace(' ', '_'), step=current_step-1) }}" 
-           class="bg-gray-600 hover:bg-gray-700 text-white px-6 py-3 rounded-lg">Previous Step</a>
+        <a href="{{ url_for('steps', topic=topic|replace(' ', '_'), step=current_step-1) }}" class="bg-gray-600 hover:bg-gray-700 text-white px-6 py-3 rounded-lg">Previous Step</a>
         {% else %}
         <div></div>
         {% endif %}
 
-        {% if current_step < total_steps - 1 %}
-        <a href="{{ url_for('steps', topic=topic|replace(' ', '_'), step=current_step+1) }}" 
-           class="bg-primary-600 hover:bg-primary-700 text-white px-6 py-3 rounded-lg">Next Step</a>
-        {% else %}
-        <a href="{{ url_for('quiz', topic=topic|replace(' ', '_')) }}" 
-           class="bg-green-600 hover:bg-green-700 text-white px-6 py-3 rounded-lg">Take Quiz</a>
-        {% endif %}
+        {% if current_step < total_steps - 1 %} <a href="{{ url_for('steps', topic=topic|replace(' ', '_'), step=current_step+1) }}"
+            class="bg-primary-600 hover:bg-primary-700 text-white px-6 py-3 rounded-lg">Next Step</a>
+            {% else %}
+            <a href="{{ url_for('quiz', topic=topic|replace(' ', '_')) }}" class="bg-green-600 hover:bg-green-700 text-white px-6 py-3 rounded-lg">Take Quiz</a>
+            {% endif %}
     </div>
 </div>
 {% endblock %}

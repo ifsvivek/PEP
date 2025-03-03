@@ -1,59 +1,85 @@
 {
     "JavaScript": {
-      "Introduction": {
-        "Definition": "JavaScript is a high-level, interpreted programming language primarily used for web development to make web pages interactive and dynamic.",
-        "History": "JavaScript was created by Brendan Eich in 1995 while he was working at Netscape. Initially, it was developed in just 10 days and was originally called Mocha, then LiveScript, before being renamed JavaScript.",
-        "Features": [
-          "Lightweight and flexible: JavaScript is easy to learn and use.",
-          "Interpreted language: No need for compilation; it runs directly in the browser.",
-          "Supports multiple programming paradigms: JavaScript allows procedural, object-oriented, and functional programming styles.",
-          "Runs in the browser: JavaScript code executes directly in web browsers without requiring external software."
-        ],
-        "Example": "console.log('Hello, World!'); // Outputs 'Hello, World!' in the browser console"
-      },
-      "HowItWorks": {
-        "Execution": "JavaScript runs inside a browser using a built-in JavaScript engine (e.g., V8 in Chrome, SpiderMonkey in Firefox). The browser reads and executes JavaScript code line by line.",
-        "Event-Driven": "JavaScript listens for user interactions like clicks, keypresses, and form submissions and executes corresponding functions when these events occur.",
-        "Single-Threaded": "JavaScript operates on a single-threaded event loop, meaning it executes one operation at a time but can handle multiple tasks asynchronously using callbacks, promises, and async/await.",
-        "Example": "document.getElementById('btn').addEventListener('click', function() { alert('Button clicked!'); });"
-      },
-      "Usage": {
-        "WhyUseIt": "JavaScript is essential for modern web development, making websites more interactive, enhancing user experience, and enabling web applications.",
-        "HowItIsUsed": [
-          "Adding interactivity: JavaScript is used to create dynamic effects like dropdown menus, popups, and animations.",
-          "Manipulating HTML & CSS: JavaScript can change webpage content and styles dynamically.",
-          "Building web applications: JavaScript, along with frameworks like React, Angular, and Vue, is used to develop complex web applications.",
-          "Server-side development: Using Node.js, JavaScript can also handle backend operations.",
-          "Mobile & Desktop apps: JavaScript frameworks like React Native and Electron enable cross-platform app development."
-        ],
-        "Example": "document.body.style.backgroundColor = 'lightblue'; // Changes the background color of the webpage"
-      },
-      "Basics": {
-        "Variables": {
-          "Definition": "Variables store data that can be used and manipulated in a program.",
-          "Types": ["var (old method, function-scoped)", "let (modern, block-scoped)", "const (constant, block-scoped)"],
-          "Example": "let name = 'John'; console.log(name); // Outputs: John"
+        "Introduction": {
+            "Definition": "JavaScript is a high-level, interpreted programming language primarily used for web development to make web pages interactive and dynamic.",
+            "History": "JavaScript was created by Brendan Eich in 1995 while he was working at Netscape. Initially, it was developed in just 10 days and was originally called Mocha, then LiveScript, before being renamed JavaScript.",
+            "Features": [
+                "Lightweight and flexible: JavaScript is easy to learn and use.",
+                "Interpreted language: No need for compilation; it runs directly in the browser.",
+                "Supports multiple programming paradigms: JavaScript allows procedural, object-oriented, and functional programming styles.",
+                "Runs in the browser: JavaScript code executes directly in web browsers without requiring external software."
+            ],
+            "Example": "console.log('Hello, World!'); // Outputs 'Hello, World!' in the browser console"
         },
-        "DataTypes": {
-          "Primitive": ["String (e.g., 'Hello')", "Number (e.g., 25)", "Boolean (e.g., true or false)", "Null (e.g., null)", "Undefined (e.g., undefined)", "Symbol", "BigInt"],
-          "NonPrimitive": ["Object (e.g., { name: 'Alice', age: 30 })", "Array (e.g., [1, 2, 3])", "Function (e.g., function greet() { return 'Hi'; })"],
-          "Example": "let age = 25; let fruits = ['Apple', 'Banana']; console.log(fruits[0]); // Outputs: Apple"
+        "HowItWorks": {
+            "Execution": "JavaScript runs inside a browser using a built-in JavaScript engine (e.g., V8 in Chrome, SpiderMonkey in Firefox). The browser reads and executes JavaScript code line by line.",
+            "Event-Driven": "JavaScript listens for user interactions like clicks, keypresses, and form submissions and executes corresponding functions when these events occur.",
+            "Single-Threaded": "JavaScript operates on a single-threaded event loop, meaning it executes one operation at a time but can handle multiple tasks asynchronously using callbacks, promises, and async/await.",
+            "Example": "document.getElementById('btn').addEventListener('click', function() { alert('Button clicked!'); });"
         },
-        "Functions": {
-          "Definition": "Functions are reusable blocks of code that perform specific tasks.",
-          "Syntax": "function functionName() { // code execution }",
-          "Example": "function greet(name) { return 'Hello ' + name; } console.log(greet('Alice')); // Outputs: Hello Alice"
+        "Usage": {
+            "WhyUseIt": "JavaScript is essential for modern web development, making websites more interactive, enhancing user experience, and enabling web applications.",
+            "HowItIsUsed": [
+                "Adding interactivity: JavaScript is used to create dynamic effects like dropdown menus, popups, and animations.",
+                "Manipulating HTML & CSS: JavaScript can change webpage content and styles dynamically.",
+                "Building web applications: JavaScript, along with frameworks like React, Angular, and Vue, is used to develop complex web applications.",
+                "Server-side development: Using Node.js, JavaScript can also handle backend operations.",
+                "Mobile & Desktop apps: JavaScript frameworks like React Native and Electron enable cross-platform app development."
+            ],
+            "Example": "document.body.style.backgroundColor = 'lightblue'; // Changes the background color of the webpage"
         },
-        "Loops": {
-          "Definition": "Loops execute a block of code multiple times.",
-          "Types": ["for (loop with defined iterations)", "while (executes while a condition is true)", "do...while (executes at least once)", "forEach (array-specific loop)"],
-          "Example": "for(let i = 0; i < 5; i++) { console.log(i); } // Outputs: 0 1 2 3 4"
-        },
-        "ConditionalStatements": {
-          "Definition": "Conditional statements execute different code based on certain conditions.",
-          "Types": ["if (executes when condition is true)", "else (executes when if condition is false)", "else if (multiple conditions)", "switch (alternative to multiple if-else statements)"],
-          "Example": "let score = 80; if(score > 50) { console.log('Pass'); } else { console.log('Fail'); } // Outputs: Pass"
+        "Basics": {
+            "Variables": {
+                "Definition": "Variables store data that can be used and manipulated in a program.",
+                "Types": [
+                    "var (old method, function-scoped)",
+                    "let (modern, block-scoped)",
+                    "const (constant, block-scoped)"
+                ],
+                "Example": "let name = 'John'; console.log(name); // Outputs: John"
+            },
+            "DataTypes": {
+                "Primitive": [
+                    "String (e.g., 'Hello')",
+                    "Number (e.g., 25)",
+                    "Boolean (e.g., true or false)",
+                    "Null (e.g., null)",
+                    "Undefined (e.g., undefined)",
+                    "Symbol",
+                    "BigInt"
+                ],
+                "NonPrimitive": [
+                    "Object (e.g., { name: 'Alice', age: 30 })",
+                    "Array (e.g., [1, 2, 3])",
+                    "Function (e.g., function greet() { return 'Hi'; })"
+                ],
+                "Example": "let age = 25; let fruits = ['Apple', 'Banana']; console.log(fruits[0]); // Outputs: Apple"
+            },
+            "Functions": {
+                "Definition": "Functions are reusable blocks of code that perform specific tasks.",
+                "Syntax": "function functionName() { // code execution }",
+                "Example": "function greet(name) { return 'Hello ' + name; } console.log(greet('Alice')); // Outputs: Hello Alice"
+            },
+            "Loops": {
+                "Definition": "Loops execute a block of code multiple times.",
+                "Types": [
+                    "for (loop with defined iterations)",
+                    "while (executes while a condition is true)",
+                    "do...while (executes at least once)",
+                    "forEach (array-specific loop)"
+                ],
+                "Example": "for(let i = 0; i < 5; i++) { console.log(i); } // Outputs: 0 1 2 3 4"
+            },
+            "ConditionalStatements": {
+                "Definition": "Conditional statements execute different code based on certain conditions.",
+                "Types": [
+                    "if (executes when condition is true)",
+                    "else (executes when if condition is false)",
+                    "else if (multiple conditions)",
+                    "switch (alternative to multiple if-else statements)"
+                ],
+                "Example": "let score = 80; if(score > 50) { console.log('Pass'); } else { console.log('Fail'); } // Outputs: Pass"
+            }
         }
-      }
     }
-  }
+}
