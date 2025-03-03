@@ -16,6 +16,7 @@ from config import Config
 from utils.content_generator import generate_content, generate_quiz
 from utils.json_handler import read_json, write_json, user_exists
 from utils.code_executor import CodeExecutor
+from utils.question_generator import QuestionGenerator
 import uuid
 
 app = Flask(__name__)
@@ -26,6 +27,7 @@ os.makedirs("data/users", exist_ok=True)
 os.makedirs("data/content", exist_ok=True)
 
 code_executor = CodeExecutor()
+question_generator = QuestionGenerator()
 
 
 @app.after_request
@@ -294,146 +296,71 @@ def submit_quiz(topic):
     )
 
 
-CODING_PROBLEMS = {
-    "python": [
-        {
-            "id": "py1",
-            "title": "Sum of Two Numbers",
-            "description": "Write a function that takes two numbers as input and returns their sum.",
-            "example": "Input: 5 3\nOutput: 8",
-            "template": "def sum_numbers(a, b):\n    # Your code here\n    pass\n\n# Read input\na, b = map(int, input().split())\nresult = sum_numbers(a, b)\nprint(result)",
-            "test_cases": [
-                {"input": "5 3", "output": "8"},
-                {"input": "10 20", "output": "30"},
-                {"input": "0 0", "output": "0"},
-            ],
-        }
-    ],
-    "javascript": [
-        {
-            "id": "js1",
-            "title": "String Reversal",
-            "description": "Write a function that reverses a string.",
-            "example": "Input: hello\nOutput: olleh",
-            "template": 'function reverseString(str) {\n    // Your code here\n}\n\n// Read input\nconst input = require("readline").createInterface({\n    input: process.stdin,\n    output: process.stdout\n});\n\ninput.on("line", (line) => {\n    console.log(reverseString(line));\n    input.close();\n});',
-            "test_cases": [
-                {"input": "hello", "output": "olleh"},
-                {"input": "javascript", "output": "tpircsavaj"},
-                {"input": "racecar", "output": "racecar"},
-            ],
-        }
-    ],
-    "c": [
-        {
-            "id": "c1",
-            "title": "Factorial Calculator",
-            "description": "Write a program that calculates the factorial of a number.",
-            "example": "Input: 5\nOutput: 120",
-            "template": '#include <stdio.h>\n\nint factorial(int n) {\n    // Your code here\n    return 0;\n}\n\nint main() {\n    int n;\n    scanf("%d", &n);\n    printf("%d\\n", factorial(n));\n    return 0;\n}',
-            "test_cases": [
-                {"input": "5", "output": "120"},
-                {"input": "3", "output": "6"},
-                {"input": "0", "output": "1"},
-            ],
-        }
-    ],
-}
+@app.route('/coding')
+def coding():
+    if 'username' not in session:
+        return redirect(url_for('login'))
+    return render_template('coding.html')
 
-
-@app.route("/code/<language>")
+@app.route('/code/<language>')
 def code_editor(language):
-    if "username" not in session:
-        return redirect(url_for("login"))
-
+    if 'username' not in session:
+        return redirect(url_for('login'))
+    
     if language not in code_executor.supported_languages:
-        return redirect(url_for("code_editor", language="python"))
+        return redirect(url_for('code_editor', language='python'))
+    
+    # Generate a new question for each visit
+    problem = question_generator.generate_question(language)
+    
+    return render_template('code_editor.html', language=language, problem=problem)
 
-    # Get the first problem for the language (you can add problem selection later)
-    problem = CODING_PROBLEMS[language][0]
-
-    return render_template("code_editor.html", language=language, problem=problem)
-
-
-@app.route("/execute_code", methods=["POST"])
+# Update the execute_code route to handle dynamic problems
+@app.route('/execute_code', methods=['POST'])
 def execute_code():
-    if "username" not in session:
-        return jsonify({"error": "Not authenticated"})
-
+    if 'username' not in session:
+        return jsonify({'error': 'Not authenticated'})
+    
     data = request.json
-    code = data.get("code")
-    language = data.get("language")
-    problem_id = data.get("problem_id")
-
-    # Find the problem and its test cases
-    problem = next(
-        (
-            p
-            for problems in CODING_PROBLEMS.values()
-            for p in problems
-            if p["id"] == problem_id
-        ),
-        None,
-    )
-
-    if not problem:
-        return jsonify({"error": "Problem not found"})
-
-    result = code_executor.execute_code(code, language, problem["test_cases"])
-
-    if result.get("success"):
+    code = data.get('code')
+    language = data.get('language')
+    
+    # Generate the same problem to get test cases
+    problem = question_generator.generate_question(language)
+    
+    result = code_executor.execute_code(code, language, problem['test_cases'])
+    
+    if result.get('success'):
         output = "Test Results:\n"
-        for i, test_result in enumerate(result["results"], 1):
+        for i, test_result in enumerate(result['results'], 1):
             output += f"\nTest {i}:\n"
             output += f"Input: {test_result['input']}\n"
             output += f"Expected: {test_result['expected']}\n"
             output += f"Actual: {test_result['actual']}\n"
-            output += "Status: " + (
-                "✓ Passed"
-                if test_result["expected"] == test_result["actual"]
-                else "✗ Failed"
-            )
-
-        if result["all_passed"]:
+            output += "Status: " + ("✓ Passed" if test_result['expected'] == test_result['actual'] 
+                                  else "✗ Failed")
+        
+        if result['all_passed']:
             output += "\n\nCongratulations! All tests passed! 🎉"
     else:
         output = f"Error:\n{result['error']}"
+    
+    return jsonify({'output': output})
 
-    return jsonify({"output": output})
-
-
-@app.route("/get_hint", methods=["POST"])
+@app.route('/get_hint', methods=['POST'])
 def get_hint():
-    if "username" not in session:
-        return jsonify({"error": "Not authenticated"})
-
+    if 'username' not in session:
+        return jsonify({'error': 'Not authenticated'})
+    
     data = request.json
-    code = data.get("code")
-    language = data.get("language")
-    problem_id = data.get("problem_id")
-
-    # Find the problem
-    problem = next(
-        (
-            p
-            for problems in CODING_PROBLEMS.values()
-            for p in problems
-            if p["id"] == problem_id
-        ),
-        None,
-    )
-
-    if not problem:
-        return jsonify({"error": "Problem not found"})
-
-    hint = code_executor.generate_hint(code, problem["description"], language)
-    return jsonify({"hint": hint})
-
-
-@app.route("/coding")
-def coding():
-    if "username" not in session:
-        return redirect(url_for("login"))
-    return render_template("coding.html")
+    code = data.get('code')
+    language = data.get('language')
+    
+    # Generate the same problem to get description
+    problem = question_generator.generate_question(language)
+    
+    hint = code_executor.generate_hint(code, problem['description'], language)
+    return jsonify({'hint': hint})
 
 
 if __name__ == "__main__":
